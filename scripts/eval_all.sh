@@ -10,6 +10,7 @@ cd /workspace/pix2db
 [ -d /workspace/models/$TAG ] || python scripts/merge_lora.py --base $BASE --adapter $CKPT --out /workspace/models/$TAG
 SETS="data/test data/real_pubtabnet data/real_cord"
 V=/workspace/vllm-venv/bin/python
+export PATH=/workspace/vllm-venv/bin:$PATH  # vLLM compile needs ninja on PATH
 export HF_HOME=/workspace/.cache/huggingface
 $V scripts/infer_vllm.py --data $SETS --model /workspace/models/$TAG --tag $TAG --prompt sql --out runs/eval
 for m in Qwen/Qwen3-VL-2B-Instruct Qwen/Qwen3-VL-4B-Instruct Qwen/Qwen3-VL-8B-Instruct; do

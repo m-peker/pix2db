@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import datetime as dt
 import re
+import unicodedata
 from collections import Counter
 
 import numpy as np
@@ -18,6 +19,7 @@ from .dbio import DBTable
 from .scene import Scene
 
 CURRENCY = re.compile(r"^(?:USD|EUR|GBP|US\$|[$€£¥₺])\s*|\s*(?:USD|EUR|GBP|[$€£¥₺])$", re.I)
+DASHES = str.maketrans({"−": "-", "–": "-", "—": "-", "‐": "-", "‑": "-"})
 DATE_FORMATS = ["%Y-%m-%d", "%b %d, %Y", "%d %B %Y", "%B %d, %Y", "%d %b %Y", "%Y/%m/%d", "%d.%m.%Y"]
 
 
@@ -28,7 +30,8 @@ def norm(v):
         v = int(v)
     if isinstance(v, (int, float)):
         return ("n", round(float(v), 6))
-    s = " ".join(str(v).split()).strip().strip("'\"")
+    s = unicodedata.normalize("NFKC", str(v)).translate(DASHES)
+    s = " ".join(s.split()).strip().strip("'\"")
     if s == "" or s.upper() in ("NULL", "NONE", "NAN", "-"):
         return None
     t = CURRENCY.sub("", s)

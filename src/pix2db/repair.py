@@ -15,7 +15,7 @@ import sqlite3
 from dataclasses import dataclass, field
 
 from .dbio import ALLOWED, split_statements, strip_fences
-from .scene import SQLITE_KEYWORDS
+from .scene import SQLITE_KEYWORDS, snake
 
 IDENT = r'(?:"[^"]+"|`[^`]+`|\[[^\]]+\]|[A-Za-z_0-9]+)'
 
@@ -74,6 +74,52 @@ def fix_identifiers(stmt: str) -> str:
     if m:
         cols = ", ".join(_quote_ident(c.strip()) for c in m.group(3).split(","))
         return f"{m.group(1)}{_quote_ident(m.group(2))} ({cols}){m.group(4)}"
+    return stmt
+
+
+TYPE_TOKEN = re.compile(r"(?is)^(.*?)\s+((?:INTEGER|INT|REAL|TEXT|NUMERIC|FLOAT|DOUBLE|DECIMAL|DATETIME|DATE|"
+                        r"BOOLEAN|VARCHAR|CHAR)\b.*)$")
+
+
+def _clean_name(name: str) -> str:
+    name = name.strip()
+    if name[:1] in '"`[':
+        return name
+    if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+        return _quote_ident(name)
+    s = snake(name)
+    return _quote_ident(s if not s[0].isdigit() else "c_" + s)
+
+
+def sanitize_identifiers(stmt: str) -> str:
+    """Rewrite free-text column names ('# of sequences¹') into snake_case identifiers."""
+    m = re.match(r"(?is)(\s*CREATE\s+TABLE\s+)(.+?)(\s*\()(.*)(\)\s*;?\s*)$", stmt)
+    if m:
+        parts, depth, buf = [], 0, ""
+        for ch in m.group(4):
+            depth += ch == "("
+            depth -= ch == ")"
+            if ch == "," and depth == 0:
+                parts.append(buf)
+                buf = ""
+            else:
+                buf += ch
+        parts.append(buf)
+        fixed = []
+        for p in parts:
+            s = p.strip()
+            if re.match(r"(?i)(PRIMARY|FOREIGN|UNIQUE|CHECK|CONSTRAINT)\b", s):
+                s = re.sub(r"\(([^()]*)\)",
+                           lambda mm: "(" + ", ".join(_clean_name(x) for x in mm.group(1).split(",")) + ")", s)
+                fixed.append("  " + s)
+                continue
+            mm = TYPE_TOKEN.match(s)
+            fixed.append("  " + (_clean_name(mm.group(1)) + " " + mm.group(2) if mm else _clean_name(s)))
+        return m.group(1) + _clean_name(m.group(2)) + " (\n" + ",\n".join(fixed) + "\n);"
+    m = re.match(r"(?is)(\s*INSERT\s+INTO\s+)(.+?)\s*\(([^)]*)\)(\s*VALUES.*)$", stmt)
+    if m:
+        cols = ", ".join(_clean_name(c) for c in m.group(3).split(","))
+        return f"{m.group(1)}{_clean_name(m.group(2))} ({cols}){m.group(4)}"
     return stmt
 
 
@@ -164,7 +210,10 @@ def repair(text: str) -> Report:
         err = _try(con, stmt)
         if err:
             for name, fn in (("escaped apostrophes", fix_apostrophes), ("quoted identifiers", fix_identifiers),
-                             ("escaped apostrophes + quoted identifiers", lambda s: fix_identifiers(fix_apostrophes(s)))):
+                             ("escaped apostrophes + quoted identifiers", lambda s: fix_identifiers(fix_apostrophes(s))),
+                             ("sanitized identifiers", sanitize_identifiers),
+                             ("escaped apostrophes + sanitized identifiers",
+                              lambda s: sanitize_identifiers(fix_apostrophes(s)))):
                 s2 = fn(stmt)
                 if s2 != stmt and _try(con, s2) is None:
                     rep.repairs.append(name)
