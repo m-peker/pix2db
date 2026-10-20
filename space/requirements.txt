@@ -1,0 +1,8 @@
+pix2db @ git+https://github.com/m-peker/pix2db
+transformers>=4.57
+torch
+accelerate
+pillow
+pandas
+gradio>=5
+spaces
