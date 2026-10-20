@@ -11,8 +11,8 @@ lora_dropout: 0.05
 # language model only; vision tower frozen
 target_modules: '.*language_model.*\.(q_proj|k_proj|v_proj|o_proj|gate_proj|up_proj|down_proj)'
 
-batch_size: 8
-grad_accum: 2           # effective batch 16
+batch_size: 4
+grad_accum: 4           # effective batch 16 (bs 8 OOMed on long batches)
 lr: 1.0e-4
 warmup_ratio: 0.03
 epochs: 1

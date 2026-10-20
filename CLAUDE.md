@@ -34,8 +34,10 @@ HF user: `musapeker`. A paper is optional, later.
   pushed to GitHub / HF Hub is lost when the pod is deleted.
 - On pod: `. /workspace/env.sh` (sets `HF_HOME=/workspace/.cache/huggingface`, venv on PATH).
   Venv: `/workspace/venv` (system torch 2.8 + transformers 5.x).
-- Long jobs: start with `setsid nohup bash -c "..." > log 2>&1 < /dev/null & disown` — plain nohup died
-  when the SSH session closed. Training: `PYTHONUNBUFFERED=1`.
+- Long jobs: start with `setsid nohup bash -c "..." > log 2>&1 < /dev/null & disown` (fully detached).
+  Training: `PYTHONUNBUFFERED=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`.
+- 2B training with per-device batch 8 OOMs at step 71 (full-vocab logits of a long batch, 12.6 GB):
+  use batch 4 × accum 4. Always check the log tail for Traceback, not just the process list.
 - vLLM lives in a separate venv `/workspace/vllm-venv` (own torch); use it only for inference
   (`scripts/infer_vllm.py`, needs merged models: `scripts/merge_lora.py`).
 - Splits: Spider train DBs → data/train (24k); dev DBs → data/val (600); test-only DBs → data/test (900).
