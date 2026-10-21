@@ -36,7 +36,7 @@ def save(img, sid, out, f, level, kind, scene):
 def tables(which: str, n: int, rng: random.Random, out: Path, accept: float, split: str = "train"):
     from datasets import load_dataset
     repo = {"pubtabnet": "apoidea/pubtabnet-html", "fintabnet": "apoidea/fintabnet-html"}[which]
-    ds = load_dataset(repo, split=split, streaming=True).shuffle(seed=42, buffer_size=2000)
+    ds = load_dataset(repo, *([] if which == "pubtabnet" else ["en"]), split=split, streaming=True).shuffle(seed=42, buffer_size=2000)
     kept = seen = 0
     with (out / f"meta_{which}.jsonl").open("w", encoding="utf-8") as f:
         for ex in ds:
