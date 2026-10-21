@@ -104,11 +104,14 @@ def html_to_table(html: str, name: str = "table_1", max_rows: int = 30, max_cols
         if nm[0].isdigit():
             nm = "c_" + nm
         names.append(nm)
-    seen = {}
+    used = set()
     for k, nm in enumerate(names):
-        seen[nm] = seen.get(nm, 0) + 1
-        if seen[nm] > 1:
-            names[k] = f"{nm}_{seen[nm]}"
+        cand, i = nm, 1
+        while cand in used or (cand != nm and cand in names):  # never collide with a real header either
+            i += 1
+            cand = f"{nm}_{i}"
+        names[k] = cand
+        used.add(cand)
     # values
     cols = []
     for c in range(ncols):
