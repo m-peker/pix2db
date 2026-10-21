@@ -72,12 +72,19 @@ def html_to_table(html: str, name: str = "table_1", max_rows: int = 30, max_cols
 
     soup = BeautifulSoup(html, "html.parser")
     thead, tbody = soup.find("thead"), soup.find("tbody")
-    if not thead or not tbody:
-        return None
-    body_rows = tbody.find_all("tr")
+    if thead and tbody:
+        head_rows, body_rows = thead.find_all("tr"), tbody.find_all("tr")
+    else:
+        # FinTabNet style: no thead/tbody. First row is the header; if it has group colspans
+        # ("2019" over "Q1 Q2"), the second row belongs to the header as well.
+        trs = soup.find_all("tr")
+        if len(trs) < 3:
+            return None
+        n_head = 2 if any(int(c.get("colspan", 1) or 1) > 1 for c in trs[0].find_all(["td", "th"])) else 1
+        head_rows, body_rows = trs[:n_head], trs[n_head:]
     if any(int(c.get("colspan", 1) or 1) > 1 for tr in body_rows for c in tr.find_all(["td", "th"])):
         return None  # section/sub-total rows spanning columns: no unambiguous relational form
-    head = _grid(thead.find_all("tr"))
+    head = _grid(head_rows)
     body = _grid(body_rows)
     if not head or not body or len(head[0]) != len(body[0]):
         return None
