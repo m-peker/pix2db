@@ -27,10 +27,29 @@ def target_text(item: dict) -> str:
 
 
 class SqlDataset(Dataset):
-    def __init__(self, data_dir: str, limit: int | None = None, seed: int = 42):
-        self.dir = Path(data_dir)
-        self.items = load_meta(data_dir)
-        random.Random(seed).shuffle(self.items)
+    """A mixture of generated sets.
+
+    sources: list of {dir, n (max items, optional), kinds (optional filter), repeat (optional, default 1)}
+    or a single directory string (v1 configs).
+    """
+
+    def __init__(self, sources, limit: int | None = None, seed: int = 42):
+        if isinstance(sources, str):
+            sources = [{"dir": sources}]
+        rng = random.Random(seed)
+        self.items = []
+        for src in sources:
+            items = load_meta(src["dir"])
+            if src.get("kinds"):
+                items = [it for it in items if it["kind"] in src["kinds"]]
+            rng.shuffle(items)
+            if src.get("n"):
+                items = items[: src["n"]]
+            for it in items:
+                it["_dir"] = src["dir"]
+            self.items += items * int(src.get("repeat", 1))
+            print(f"  source {src['dir']} {src.get('kinds', '')}: {len(items)} x{src.get('repeat', 1)}")
+        rng.shuffle(self.items)
         if limit:
             self.items = self.items[:limit]
 
@@ -39,7 +58,7 @@ class SqlDataset(Dataset):
 
     def __getitem__(self, i):
         it = self.items[i]
-        img = Image.open(self.dir / "images" / f"{it['id']}.png").convert("RGB")
+        img = Image.open(Path(it["_dir"]) / "images" / f"{it['id']}.png").convert("RGB")
         return {"image": img, "target": target_text(it)}
 
 
@@ -102,7 +121,7 @@ def main():
         model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
         model.enable_input_require_grads()
 
-    train = SqlDataset(cfg["train_dir"], limit=args.limit)
+    train = SqlDataset(cfg.get("train_sources") or cfg["train_dir"], limit=args.limit)
     print(f"train items: {len(train)}")
     targs = TrainingArguments(
         output_dir=cfg["output_dir"],

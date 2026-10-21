@@ -1,0 +1,26 @@
+# v2: synthetic + real tables (PubTabNet, FinTabNet) + real & synthetic receipts
+model: Qwen/Qwen3-VL-2B-Instruct
+output_dir: /workspace/ckpt/qwen3vl2b-lora-v2
+seed: 42
+max_pixels: 1310720
+max_len: 4096
+
+train_sources:
+  - {dir: data/train, n: 14000}                      # v1 synthetic (all 6 levels), subsampled
+  - {dir: data/receipt_train}                        # 3k synthetic receipts
+  - {dir: data/real_train, kinds: [pubtabnet]}       # ~10k real scientific tables
+  - {dir: data/real_train, kinds: [fintabnet]}       # ~8k real financial tables
+  - {dir: data/real_train, kinds: [cord], repeat: 2} # 800 real receipt photos, seen twice
+
+lora_r: 64
+lora_alpha: 128
+lora_dropout: 0.05
+target_modules: '.*language_model.*\.(q_proj|k_proj|v_proj|o_proj|gate_proj|up_proj|down_proj)'
+
+batch_size: 4
+grad_accum: 4
+lr: 1.0e-4
+warmup_ratio: 0.03
+epochs: 1
+save_steps: 300
+gradient_checkpointing: true
