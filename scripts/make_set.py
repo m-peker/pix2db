@@ -1,6 +1,6 @@
 """Generate an image set with gold databases. Sharded and resumable.
 
-Levels: 1 clean · 2 styled · 3 hierarchical · 4 document (FK) · 5 scan · 6 chart
+Levels: 1 clean · 2 styled · 3 hierarchical · 4 document (FK) · 5 scan · 6 chart · 9 receipt
 Usage:
   python scripts/make_set.py --spider DIR [DIR ...] --dbs ids.txt --out data/train \
       --counts 1:2000,2:4000,3:5000,4:5000,5:5000,6:4000 --shard 0 --num-shards 16
@@ -16,6 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from pix2db.chart import chart_scene_from, render_chart  # noqa: E402
+from pix2db.receipt import receipt_html, sample_receipt  # noqa: E402
 from pix2db.render import Renderer, render_scene, scan_augment  # noqa: E402
 from pix2db.scene import sample_multi, sample_parent_child, sample_single  # noqa: E402
 
@@ -32,6 +33,8 @@ def pick_kind(level: int, rng: random.Random) -> str:
         return "doc"
     if level == 5:
         return "table" if r < 0.4 else ("doc" if r < 0.9 else "multi")
+    if level == 9:
+        return "receipt"
     return "chart"
 
 
@@ -40,6 +43,8 @@ def sample(kind: str, level: int, db: Path, rng: random.Random):
         return sample_parent_child(db, rng)
     if kind == "multi":
         return sample_multi(db, rng)
+    if kind == "receipt":
+        return sample_receipt(rng)
     if kind == "chart":
         s = sample_single(db, rng, n_rows=(3, 12), n_cols=(3, 8))
         return chart_scene_from(s, rng) if s else None
@@ -98,7 +103,14 @@ def main():
                     continue
                 sid = f"{args.prefix}s{args.shard:03d}_L{level}_{made:05d}"
                 extra = {"num_tol_abs": 0.0}
-                if kind == "chart":
+                if kind == "receipt":
+                    scene, info = scene
+                    if renderer is None:
+                        renderer = Renderer()
+                    img = renderer.png(receipt_html(scene, info, rng))
+                    if rng.random() < 0.85:
+                        img = scan_augment(img, rng)
+                elif kind == "chart":
                     img, info = render_chart(scene, rng)
                     extra.update(info)
                     if rng.random() < 0.2:
