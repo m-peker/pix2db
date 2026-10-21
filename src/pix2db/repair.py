@@ -161,6 +161,83 @@ def salvage_insert(stmt: str) -> str | None:
     return head + ",\n".join(tuples) + ";"
 
 
+LITERAL = re.compile(r"(?is)^(NULL|[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?|'(?:[^']|'')*')$")
+
+
+def _split_top(s: str, sep: str = ",") -> list[str]:
+    """Split on `sep` outside quotes and parentheses."""
+    out, buf, depth, in_str, i = [], "", 0, False, 0
+    while i < len(s):
+        ch = s[i]
+        if in_str:
+            buf += ch
+            if ch == "'":
+                if i + 1 < len(s) and s[i + 1] == "'":
+                    buf += "'"
+                    i += 1
+                else:
+                    in_str = False
+        elif ch == "'":
+            in_str, buf = True, buf + ch
+        elif ch == "(":
+            depth, buf = depth + 1, buf + ch
+        elif ch == ")":
+            depth, buf = depth - 1, buf + ch
+        elif ch == sep and depth == 0:
+            out.append(buf)
+            buf = ""
+        else:
+            buf += ch
+        i += 1
+    out.append(buf)
+    return out
+
+
+def _fix_field(f: str) -> str:
+    f = f.strip()
+    if LITERAL.match(f):
+        return f
+    if len(f) >= 2 and f[0] == "'" and f[-1] == "'":  # quoted, but with unescaped quotes inside
+        f = f[1:-1]
+    return "'" + f.replace("'", "''") + "'"
+
+
+def row_fallback(con: sqlite3.Connection, stmt: str) -> tuple[str | None, int, int]:
+    """Insert a failing multi-row INSERT row by row, quoting bare text values ('9 (8)', '85.0 ± 10.8').
+    Returns (statement of the rows that went in, n_ok, n_dropped)."""
+    m = re.match(r"(?is)\s*(INSERT\s+INTO\s+.+?\([^)]*\))\s*VALUES\s*(.*?);?\s*$", stmt)
+    if not m:
+        return None, 0, 0
+    head = sanitize_identifiers(m.group(1) + " VALUES ()").rsplit(" VALUES", 1)[0]
+    ncols = len(_split_top(re.search(r"\(([^)]*)\)\s*$", head).group(1)))
+    tuples = [t.strip() for t in _split_top(m.group(2)) if t.strip()]
+    ok_rows, dropped = [], 0
+    for t in tuples:
+        if not (t.startswith("(") and t.endswith(")")):
+            dropped += 1
+            continue
+        fields = [_fix_field(f) for f in _split_top(t[1:-1])]
+        if len(fields) != ncols:
+            dropped += 1
+            continue
+        row = "(" + ", ".join(fields) + ")"
+        err = _try(con, f"{head} VALUES {row};")
+        if err and "UNIQUE constraint failed" in err:
+            tbl = err.split("failed:")[1].strip().split(".")[0]
+            try:
+                if drop_primary_key(con, tbl):
+                    err = _try(con, f"{head} VALUES {row};")
+            except sqlite3.Error:
+                pass
+        if err:
+            dropped += 1
+        else:
+            ok_rows.append(row)
+    if not ok_rows:
+        return None, 0, dropped
+    return f"{head} VALUES\n" + ",\n".join(ok_rows) + ";", len(ok_rows), dropped
+
+
 def drop_primary_key(con: sqlite3.Connection, table: str) -> str | None:
     """Recreate `table` without PRIMARY KEY / UNIQUE so that conflicting rows can be stored."""
     row = con.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone()
@@ -230,13 +307,20 @@ def repair(text: str) -> Report:
                 final = [re.sub(r"(?i)\s+PRIMARY\s+KEY", "", s) if re.match(rf'(?is)\s*CREATE\s+TABLE\s+"?{re.escape(tbl)}"?\s*\(', s) else s
                          for s in final]
                 err = None
+        if err and re.match(r"(?i)\s*INSERT", stmt):
+            s2, n_ok, n_drop = row_fallback(con, fix_apostrophes(stmt))
+            if s2:
+                rep.repairs.append(f"row-by-row insert with quoted text values ({n_ok} ok, {n_drop} dropped)")
+                if n_drop:
+                    rep.warnings.append(f"{n_drop} row(s) could not be repaired and were dropped")
+                stmt, err = s2, None
         if err:
             rep.errors.append(f"{err} :: {stmt[:100]}")
             continue
         final.append(stmt)
     con.commit()
     rep.sql = "\n".join(final)
-    rep.warnings = checks(con)
+    rep.warnings += checks(con)
     return rep
 
 

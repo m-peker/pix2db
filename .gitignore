@@ -10,3 +10,5 @@ checkpoints/
 *.db
 .env
 preview/
+runs_v1/
+data_v1/
