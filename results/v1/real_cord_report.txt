@@ -1,0 +1,80 @@
+
+== f1 ==
+level                                 8    all
+system                                        
+Qwen3-VL-2B-Instruct__sql         0.238  0.238
+Qwen3-VL-2B-Instruct__sql+repair  0.247  0.247
+Qwen3-VL-4B-Instruct__sql         0.516  0.516
+Qwen3-VL-4B-Instruct__sql+repair  0.553  0.553
+Qwen3-VL-8B-Instruct__html        0.326  0.326
+Qwen3-VL-8B-Instruct__sql         0.540  0.540
+Qwen3-VL-8B-Instruct__sql+repair  0.540  0.540
+pix2db-2b-v1__sql                 0.358  0.358
+pix2db-2b-v1__sql+repair          0.393  0.393
+
+== recall ==
+level                                 8    all
+system                                        
+Qwen3-VL-2B-Instruct__sql         0.570  0.570
+Qwen3-VL-2B-Instruct__sql+repair  0.589  0.589
+Qwen3-VL-4B-Instruct__sql         0.721  0.721
+Qwen3-VL-4B-Instruct__sql+repair  0.788  0.788
+Qwen3-VL-8B-Instruct__html        0.439  0.439
+Qwen3-VL-8B-Instruct__sql         0.764  0.764
+Qwen3-VL-8B-Instruct__sql+repair  0.764  0.764
+pix2db-2b-v1__sql                 0.443  0.443
+pix2db-2b-v1__sql+repair          0.487  0.487
+
+== table_exact ==
+level                                 8    all
+system                                        
+Qwen3-VL-2B-Instruct__sql         0.017  0.017
+Qwen3-VL-2B-Instruct__sql+repair  0.017  0.017
+Qwen3-VL-4B-Instruct__sql         0.067  0.067
+Qwen3-VL-4B-Instruct__sql+repair  0.067  0.067
+Qwen3-VL-8B-Instruct__html        0.033  0.033
+Qwen3-VL-8B-Instruct__sql         0.050  0.050
+Qwen3-VL-8B-Instruct__sql+repair  0.050  0.050
+pix2db-2b-v1__sql                 0.000  0.000
+pix2db-2b-v1__sql+repair          0.000  0.000
+
+== type_acc ==
+level                                 8    all
+system                                        
+Qwen3-VL-2B-Instruct__sql         0.993  0.993
+Qwen3-VL-2B-Instruct__sql+repair  0.993  0.993
+Qwen3-VL-4B-Instruct__sql         0.988  0.988
+Qwen3-VL-4B-Instruct__sql+repair  0.989  0.989
+Qwen3-VL-8B-Instruct__html        0.901  0.901
+Qwen3-VL-8B-Instruct__sql         0.994  0.994
+Qwen3-VL-8B-Instruct__sql+repair  0.994  0.994
+pix2db-2b-v1__sql                 0.980  0.980
+pix2db-2b-v1__sql+repair          0.982  0.982
+
+== exec_ok ==
+level                                 8    all
+system                                        
+Qwen3-VL-2B-Instruct__sql         0.617  0.617
+Qwen3-VL-2B-Instruct__sql+repair  0.667  0.667
+Qwen3-VL-4B-Instruct__sql         0.900  0.900
+Qwen3-VL-4B-Instruct__sql+repair  1.000  1.000
+Qwen3-VL-8B-Instruct__html        1.000  1.000
+Qwen3-VL-8B-Instruct__sql         1.000  1.000
+Qwen3-VL-8B-Instruct__sql+repair  1.000  1.000
+pix2db-2b-v1__sql                 0.850  0.850
+pix2db-2b-v1__sql+repair          0.917  0.917
+
+== mean output tokens / sec per image ==
+                                  n_tokens  seconds
+system                                             
+Qwen3-VL-2B-Instruct__sql            793.9      0.8
+Qwen3-VL-2B-Instruct__sql+repair     793.9      0.8
+Qwen3-VL-4B-Instruct__sql            166.3      0.3
+Qwen3-VL-4B-Instruct__sql+repair     166.3      0.3
+Qwen3-VL-8B-Instruct__html           346.2      0.8
+Qwen3-VL-8B-Instruct__sql            176.9      0.5
+Qwen3-VL-8B-Instruct__sql+repair     176.9      0.5
+pix2db-2b-v1__sql                    215.5      0.5
+pix2db-2b-v1__sql+repair             215.5      0.5
+
+saved runs/eval/real_cord/scores.csv
