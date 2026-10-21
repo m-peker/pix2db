@@ -18,6 +18,6 @@ for m in Qwen/Qwen3-VL-2B-Instruct Qwen/Qwen3-VL-4B-Instruct Qwen/Qwen3-VL-8B-In
 done
 $V scripts/infer_vllm.py --data $SETS --model Qwen/Qwen3-VL-8B-Instruct --prompt html --out runs/eval
 for s in test real_pubtabnet real_cord; do
-  python scripts/score.py --data data/$s --runs runs/eval/$s --repair > runs/eval/$s/report.txt 2>&1
+  /workspace/venv/bin/python scripts/score.py --data data/$s --runs runs/eval/$s --repair > runs/eval/$s/report.txt 2>&1
 done
 echo EVALDONE

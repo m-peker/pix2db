@@ -40,3 +40,25 @@ Findings:
 ### Open questions
 - Project name final? (`pix2db` placeholder)
 - When to create the GitHub repo (private first?).
+
+## 2026-10-21 — Session 1 (night)
+
+### Done
+- Data v2: 24k train / 600 val / 900 test (disjoint Spider DBs), 6 levels incl. charts; real eval sets
+  real_pubtabnet (150) and real_cord (60). Pushed to HF `musapeker/pix2db-data` (private, parquet).
+- Training: Qwen3-VL-2B LoRA r64, 1 epoch, bs 4 × accum 4 (bs 8 OOMed at step 71). 2h33m on A40.
+  Adapter: HF `musapeker/pix2db-2b-lora` (private).
+- Eval with vLLM (0.09 s/image): ours + Qwen3-VL 2B/4B/8B (sql) + 8B (html) on test, real_pubtabnet, real_cord.
+- Pod runs `scripts/finish_and_stop.sh` unattended: score → upload merged model + eval_runs to HF
+  `musapeker/pix2db-2b` (private) → verify → `runpodctl stop pod`. Log: /workspace/logs/finish.log.
+
+### Preliminary results (ours, before final scoring with NFKC metric)
+- Synthetic test: cell F1 .96 (.97 with repair), table exact .84 (.85), FK recall .99. Charts weakest (exact .59).
+- Real PubTabNet: F1 only ~.27 — mostly metric/gold artefacts (en-dash vs hyphen, superscripts) and free-text
+  headers ('# of sequences¹') breaking CREATE TABLE → fixed in metric (NFKC) and repair (sanitize identifiers).
+- Real CORD receipts: recall ~.44–.49. Real domain gap: no receipt-like layouts in training data.
+
+### Next (v2 data)
+- Receipt / invoice templates (unit price, qty, line total, free-text lines between items).
+- Headers with symbols, units, footnote markers (gold stays snake_case).
+- Compare all systems once final reports are on HF (`eval_runs/*/report.txt`).

@@ -5,9 +5,13 @@ LOG=/workspace/logs/finish.log
 exec >> $LOG 2>&1
 . /workspace/env.sh
 cd /workspace/pix2db
-echo "[$(date)] waiting for eval"
-until grep -qE "EVALDONE|Traceback" /workspace/logs/eval.log; do sleep 60; done
-if ! grep -q EVALDONE /workspace/logs/eval.log; then echo "eval failed, leaving pod running"; exit 1; fi
+echo "[$(date)] waiting for eval_all.sh to exit"
+while pgrep -f "[e]val_all.sh" > /dev/null; do sleep 30; done
+for s in test real_pubtabnet real_cord; do
+  [ $(ls runs/eval/$s/*.jsonl | wc -l) -eq 5 ] || { echo "missing runs in $s, leaving pod running"; exit 1; }
+  /workspace/venv/bin/python scripts/score.py --data data/$s --runs runs/eval/$s --repair > runs/eval/$s/report.txt 2>&1     || { echo "scoring failed for $s, leaving pod running"; exit 1; }
+done
+echo "[$(date)] scoring done"
 python - <<PY || { echo "UPLOAD FAILED, leaving pod running"; exit 1; }
 from huggingface_hub import HfApi
 api = HfApi()
