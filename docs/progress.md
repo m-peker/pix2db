@@ -62,3 +62,15 @@ Findings:
 - Receipt / invoice templates (unit price, qty, line total, free-text lines between items).
 - Headers with symbols, units, footnote markers (gold stays snake_case).
 - Compare all systems once final reports are on HF (`eval_runs/*/report.txt`).
+
+## 2026-10-21 — Session 2
+
+- v1 final results (results/v1): synthetic test exact .85 / FK .99 (Qwen3-VL-8B .75 / .75; 8B HTML pipeline .47 / 0).
+  Real PubTabNet F1 .32 (8B HTML .78), CORD recall .49 (4B .79). → overfit to synthetic layouts.
+- Error analysis: 60/150 PubTabNet outputs did not execute (bare composite values like `9 (8)`, `85.0 ± 10.8`,
+  free-text headers, repetition loops). Repair: row-by-row fallback that quotes bare values → F1 .32 → .43.
+- v2 data on new pod: v1 synthetic (14k subsample) + 3k synthetic receipts + 10k PubTabNet train + 8k FinTabNet train
+  + 795 CORD train (x2). New eval sets: real_fintabnet (150, validation split), test_receipt (150).
+- FinTabNet HTML has no thead/tbody → htmltable.py treats the first row(s) as header.
+- Unattended chain on pod: /workspace/chain_v2.sh → scripts/pipeline_v2.sh → HF musapeker/pix2db-2b (v1 tagged `v1`),
+  musapeker/pix2db-2b-v2-lora; eval in eval_runs_v2/. Log: /workspace/logs/pipeline_v2.log.

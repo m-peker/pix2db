@@ -43,7 +43,11 @@ HF user: `musapeker`. A paper is optional, later.
 - Splits: Spider train DBs → data/train (24k); dev DBs → data/val (600); test-only DBs → data/test (900).
   Real eval: data/real_pubtabnet (150 tables), data/real_cord (60 receipts, recall_only).
 - Raw data on pod: `/workspace/data/raw/spider/spider_data/{database,test_database}` (Spider 1.0, CC-BY-SA).
-- Never ask the user to paste tokens into chat.
+- Never ask the user to paste tokens into chat. HF token can be copied from the local machine to the pod over SSH.
+- Pod SSH sessions drop ("Connection reset by peer"): never run long work inside an SSH session. Put the whole
+  remaining plan in one detached chain script on the pod (wait for data -> check -> train -> eval -> upload -> stop),
+  because a local waiter dies with the Claude session (this left the v2 pod idle for hours).
+- Pod setup: `bash scripts/setup_pod.sh`; restore v1 data: `python scripts/pull_data.py`.
 
 ## Data generation (synthetic, gold DB is free)
 
@@ -74,7 +78,9 @@ QA accuracy (text-to-SQL on predicted DB vs gold SQL on gold DB).
 - [x] P0 idea, positioning, prior-work check, pod setup
 - [x] P1 feasibility: 150 images (5 levels), zero-shot Qwen3-VL 2B/4B/8B + Qwen2.5-VL-3B — see docs/progress.md
 - Base model: Qwen3-VL (Apache-2.0). Qwen2.5-VL-3B is non-commercial licence — do not ship on it.
-- [ ] P2 decide go/pivot with the user
+- [x] P2 go
+- [x] v1 trained/evaluated (results/v1): synthetic exact .85 (8B: .75) but weak on real images
+- [ ] v2: + real PubTabNet/FinTabNet/CORD train data + synthetic receipts (scripts/pipeline_v2.sh)
 - [ ] P3 full data generation (+ charts, + real scans eval set)
 - [ ] P4 fine-tune (LoRA) 2–4B model
 - [ ] P5 verification layer, packaging, HF model card, Space, GitHub release
