@@ -10,7 +10,7 @@ Qwen3-VL-8B-Instruct__html        0.870  0.870
 Qwen3-VL-8B-Instruct__sql         0.585  0.585
 Qwen3-VL-8B-Instruct__sql+repair  0.593  0.593
 pix2db-2b-v1__sql                 0.302  0.302
-pix2db-2b-v1__sql+repair          0.445  0.445
+pix2db-2b-v1__sql+repair          0.447  0.447
 pix2db-2b-v2__sql                 0.964  0.964
 pix2db-2b-v2__sql+repair          0.964  0.964
 
@@ -25,7 +25,7 @@ Qwen3-VL-8B-Instruct__html        0.871  0.871
 Qwen3-VL-8B-Instruct__sql         0.609  0.609
 Qwen3-VL-8B-Instruct__sql+repair  0.618  0.618
 pix2db-2b-v1__sql                 0.298  0.298
-pix2db-2b-v1__sql+repair          0.437  0.437
+pix2db-2b-v1__sql+repair          0.439  0.439
 pix2db-2b-v2__sql                 0.969  0.969
 pix2db-2b-v2__sql+repair          0.969  0.969
 
@@ -55,7 +55,7 @@ Qwen3-VL-8B-Instruct__html        0.594  0.594
 Qwen3-VL-8B-Instruct__sql         0.852  0.852
 Qwen3-VL-8B-Instruct__sql+repair  0.854  0.854
 pix2db-2b-v1__sql                 0.885  0.885
-pix2db-2b-v1__sql+repair          0.870  0.870
+pix2db-2b-v1__sql+repair          0.867  0.867
 pix2db-2b-v2__sql                 0.959  0.959
 pix2db-2b-v2__sql+repair          0.959  0.959
 
@@ -70,7 +70,7 @@ Qwen3-VL-8B-Instruct__html        1.000  1.000
 Qwen3-VL-8B-Instruct__sql         0.987  0.987
 Qwen3-VL-8B-Instruct__sql+repair  1.000  1.000
 pix2db-2b-v1__sql                 0.533  0.533
-pix2db-2b-v1__sql+repair          0.773  0.773
+pix2db-2b-v1__sql+repair          0.780  0.780
 pix2db-2b-v2__sql                 1.000  1.000
 pix2db-2b-v2__sql+repair          1.000  1.000
 
