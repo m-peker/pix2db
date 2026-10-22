@@ -61,6 +61,28 @@ print(proc.decode(out[0, inputs["input_ids"].shape[1]:], skip_special_tokens=Tru
 
 The model was trained with this exact instruction (`SQL_PROMPT`); other prompts work less well.
 
+### LoRA adapter
+
+The repo root holds the merged model. The LoRA adapter it was merged from is in `adapter/`
+(280 MB) — useful if you want to keep fine-tuning on your own documents:
+
+```python
+from peft import PeftModel
+from transformers import AutoModelForImageTextToText
+base = AutoModelForImageTextToText.from_pretrained("Qwen/Qwen3-VL-2B-Instruct", dtype="auto", device_map="auto")
+model = PeftModel.from_pretrained(base, "musapeker/pix2db-2b", subfolder="adapter")
+```
+
+## Repository contents
+
+| Path | What |
+|---|---|
+| `model.safetensors`, configs | merged model (v2) |
+| `adapter/` | LoRA adapter (r=64) the model was merged from |
+| `eval_runs_v2/` | raw outputs and scores of every system on every eval set (v2) |
+| `eval_runs/` | the same for the earlier synthetic-only v1 |
+| tag `v1` | the v1 weights |
+
 ## Results
 
 | System | Synthetic test<br>table exact | FK recall | PubTabNet F1 | FinTabNet F1 | CORD recall | Synth. receipts recall | TabRecSet (unseen) F1 |
