@@ -14,8 +14,8 @@ python - <<PY || { echo "UPLOAD FAILED"; exit 1; }
 from huggingface_hub import HfApi
 api = HfApi()
 api.create_tag("musapeker/pix2db-2b", tag="v1", exist_ok=True)
-api.create_repo("musapeker/pix2db-2b-v2-lora", private=True, exist_ok=True)
-api.upload_folder(folder_path="/workspace/ckpt/qwen3vl2b-lora-v2/final", repo_id="musapeker/pix2db-2b-v2-lora")
+# the LoRA adapter lives in the model repo under adapter/
+api.upload_folder(folder_path="/workspace/ckpt/qwen3vl2b-lora-v2/final", repo_id="musapeker/pix2db-2b", path_in_repo="adapter", allow_patterns=["adapter_config.json", "adapter_model.safetensors"])
 api.upload_folder(folder_path="/workspace/models/pix2db-2b-v2", repo_id="musapeker/pix2db-2b",
                   commit_message="v2 merged model (synthetic + PubTabNet + FinTabNet + receipts)")
 api.upload_folder(folder_path="/workspace/pix2db/runs/eval", repo_id="musapeker/pix2db-2b", path_in_repo="eval_runs_v2",

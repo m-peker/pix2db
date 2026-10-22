@@ -82,7 +82,7 @@ QA accuracy (text-to-SQL on predicted DB vs gold SQL on gold DB).
 - [x] v1 trained/evaluated (results/v1): synthetic exact .85 (8B: .75) but weak on real images
 - [x] v2: + real PubTabNet/FinTabNet/CORD train data + synthetic receipts — results/v2 (beats 8B on all sets
       except TabRecSet unseen, where 8B→HTML leads on cell F1 .58 vs .52)
-- [x] Release (2026-10-22): GitHub public; HF model musapeker/pix2db-2b (v1 tag), LoRAs, dataset (10 splits) public;
+- [x] Release (2026-10-22): GitHub public; HF model musapeker/pix2db-2b (v1 tag, LoRA in adapter/), dataset (10 splits) public;
       demo = STATIC Space musapeker/pix2db (sql.js, cached outputs) because Gradio Spaces need HF PRO (user can't pay).
       Gradio app kept in space/ for local/PRO use; Colab notebook in notebooks/.
 - [ ] Next ideas: 4B variant, handwriting, long tables, chart accuracy, TabRecSet key-value header handling
