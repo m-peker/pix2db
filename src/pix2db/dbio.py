@@ -35,7 +35,12 @@ def split_statements(sql: str) -> list[str]:
             stmts.append(buf.strip())
             buf = ""
     if buf.strip():
-        stmts.append(buf.strip())  # incomplete tail, will likely fail
+        # An odd number of quotes (e.g. 'O'Brien') makes SQLite see one endless string that swallows every
+        # later statement. Fall back to splitting the tail at line-final semicolons.
+        parts = [p.strip().rstrip(";").rstrip() for p in re.split(r";[ \t]*\r?\n", buf.strip())]
+        parts = [p for p in parts if p]
+        ends = buf.strip().endswith(";")
+        stmts += [p + (";" if k < len(parts) - 1 or ends else "") for k, p in enumerate(parts)]
     return stmts
 
 

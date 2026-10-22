@@ -74,3 +74,14 @@ Findings:
 - FinTabNet HTML has no thead/tbody → htmltable.py treats the first row(s) as header.
 - Unattended chain on pod: /workspace/chain_v2.sh → scripts/pipeline_v2.sh → HF musapeker/pix2db-2b (v1 tagged `v1`),
   musapeker/pix2db-2b-v2-lora; eval in eval_runs_v2/. Log: /workspace/logs/pipeline_v2.log.
+
+## 2026-10-22 — Release
+
+- v2 results (results/v2/summary.csv): synthetic exact .86 / FK .99; PubTabNet F1 .81; FinTabNet .96; CORD recall .93;
+  synthetic receipts 1.00; TabRecSet unseen F1 .52 (8B→HTML .58, 8B→SQL .45).
+- Unseen eval: TabRecSet (CC BY 4.0, figshare), English all-line, one table per image, first row = header
+  (category flags in TabRecSet are unreliable — all "document image").
+- Repair: pad rows missing trailing cells; odd-quote statements no longer swallow later statements.
+- Published: GitHub m-peker/pix2db (public), HF model/LoRAs/dataset public, static Space musapeker/pix2db.
+- HF Gradio Spaces now require PRO even on cpu-basic (402) → static sql.js demo instead.
+- Pod: all artefacts on HF; pod can be deleted. Remember runpodctl key must be configured on every new pod.

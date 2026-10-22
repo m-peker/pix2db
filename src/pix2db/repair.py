@@ -284,7 +284,7 @@ def repair(text: str) -> Report:
                 if s2:
                     rep.repairs.append("salvaged complete rows of a truncated INSERT")
                     stmt = s2
-            else:
+            elif not stmt.rstrip().endswith(";"):
                 stmt = stmt.rstrip() + ";"
         err = _try(con, stmt)
         if err:
