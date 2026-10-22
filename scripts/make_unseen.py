@@ -4,7 +4,7 @@ English, original (all-line) images only: camera photos, scans, Excel screenshot
 Never used for training. Each table is cropped from its image via the cell polygons; the first grid row
 is the header (TabRecSet does not mark headers); gold follows the same conventions as htmltable.py.
 
-Usage: python scripts/make_unseen.py --root RAW/TabRecSet\ \(CurveTabSet\) --out data/unseen_tabrecset --n 150
+Usage: python scripts/make_unseen.py --root "RAW/TabRecSet (CurveTabSet)" --out data/unseen_tabrecset --n 150
 """
 from __future__ import annotations
 
@@ -57,7 +57,6 @@ def main():
     rng = random.Random(args.seed)
     rng.shuffle(files)
     per_cat = {c: 0 for c in CATS + ["other"]}
-    quota = {c: args.n // 3 for c in CATS + ["other"]}  # soft cap so no category dominates
     kept = 0
     with (out / "meta.jsonl").open("w", encoding="utf-8") as f:
         for jf in files:
@@ -65,8 +64,6 @@ def main():
                 break
             d = json.load(open(jf, encoding="utf-8"))
             cat = next((c for c in CATS if d.get("flags", {}).get(c)), "other")
-            if per_cat[cat] >= quota[cat]:
-                continue
             img_path = root / "image" / "english_all-line" / d["imagePath"]
             if not img_path.exists():
                 continue
@@ -77,7 +74,7 @@ def main():
                     continue
                 r, c, rs, cs = map(int, parts[:4])
                 groups[s.get("group_id")].append(((r, c, rs, cs, " ".join(parts[4].split())), s["points"]))
-            for gid, cells in groups.items():
+            for gid, cells in list(groups.items())[:1]:  # one table per image keeps the set diverse
                 if kept >= args.n:
                     break
                 texts = [t for (_, _, _, _, t), _ in cells]
