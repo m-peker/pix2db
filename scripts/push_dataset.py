@@ -14,9 +14,13 @@ from pix2db.data import load_meta  # noqa: E402
 from pix2db.scene import Scene  # noqa: E402
 
 LEVEL_NAMES = {1: "clean", 2: "styled", 3: "hierarchical", 4: "document", 5: "scan", 6: "chart",
-               7: "real_table", 8: "real_receipt"}
+               7: "real_table", 8: "real_receipt", 9: "synthetic_receipt", 11: "real_table_unseen"}
 SPLITS = {"train": "data/train", "validation": "data/val", "test": "data/test",
-          "real_pubtabnet": "data/real_pubtabnet", "real_cord": "data/real_cord"}
+          "real_pubtabnet": "data/real_pubtabnet", "real_cord": "data/real_cord",
+          # v2 additions
+          "train_real": "data/real_train", "train_receipt": "data/receipt_train",
+          "real_fintabnet": "data/real_fintabnet", "test_receipt": "data/test_receipt",
+          "unseen_tabrecset": "data/unseen_tabrecset"}
 
 
 def gen(d):
