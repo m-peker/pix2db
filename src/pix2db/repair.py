@@ -217,6 +217,8 @@ def row_fallback(con: sqlite3.Connection, stmt: str) -> tuple[str | None, int, i
             dropped += 1
             continue
         fields = [_fix_field(f) for f in _split_top(t[1:-1])]
+        if 0 < ncols - len(fields) <= max(1, ncols // 4):
+            fields += ["NULL"] * (ncols - len(fields))  # trailing empty cells left out by the model
         if len(fields) != ncols:
             dropped += 1
             continue
