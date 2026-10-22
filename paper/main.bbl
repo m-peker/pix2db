@@ -1,4 +1,4 @@
-\begin{thebibliography}{32}
+\begin{thebibliography}{34}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -127,14 +127,24 @@ Brandon Smock, Rohith Pesala, and Robin Abraham.
 \newblock {PubTables-1M}: Towards comprehensive table extraction from unstructured documents.
 \newblock In \emph{Proceedings of CVPR}, 2022.
 
+\bibitem[Smock et~al.(2023)Smock, Pesala, and Abraham]{smock2023aligning}
+Brandon Smock, Rohith Pesala, and Robin Abraham.
+\newblock Aligning benchmark datasets for table structure recognition.
+\newblock In \emph{International Conference on Document Analysis and Recognition}, 2023.
+
 \bibitem[Wei et~al.(2024)Wei, Liu, Chen, Wang, Kong, Xu, Ge, Zhao, Sun, Peng, Han, and Zhang]{wei2024got}
 Haoran Wei, Chenglong Liu, Jinyue Chen, Jia Wang, Lingyu Kong, Yanming Xu, Zheng Ge, Liang Zhao, Jianjian Sun, Yuang Peng, Chunrui Han, and Xiangyu Zhang.
 \newblock General {OCR} theory: Towards {OCR}-2.0 via a unified end-to-end model, 2024.
 
-\bibitem[Yang et~al.(2023)Yang, Hu, Liu, Huang, and Gu]{yang2023tabrecset}
+\bibitem[Yang et~al.(2023{\natexlab{a}})Yang, Hu, Liu, Huang, and Gu]{tabrecsetdata}
+Fan Yang, Lei Hu, Xinwu Liu, Shuangping Huang, and Zhenghui Gu.
+\newblock {TabRecSet}: A large scale dataset for end-to-end table recognition in the wild.
+\newblock figshare dataset, 2023{\natexlab{a}}.
+
+\bibitem[Yang et~al.(2023{\natexlab{b}})Yang, Hu, Liu, Huang, and Gu]{yang2023tabrecset}
 Fan Yang, Lei Hu, Xinwu Liu, Shuangping Huang, and Zhenghui Gu.
 \newblock A large-scale dataset for end-to-end table recognition in the wild.
-\newblock \emph{Scientific Data}, 2023.
+\newblock \emph{Scientific Data}, 2023{\natexlab{b}}.
 \newblock \doi{10.1038/s41597-023-01985-8}.
 
 \bibitem[Yu et~al.(2018)Yu, Zhang, Yang, Yasunaga, Wang, Li, Ma, Li, Yao, Roman, Zhang, and Radev]{yu2018spider}

@@ -33,7 +33,7 @@ reaches \Nourstest{} table exact match and \Nfkours{} foreign-key recall on rend
 against \NEightbsqltest{}/\NfkEightbsql{} for the 8B model of the same family prompted for SQL and
 \NEightbhtmltest{}/\NfkEightbhtml{} for an 8B HTML-to-SQLite pipeline. On held-out real images it obtains cell F1
 \Noursrealpubtabnet{} (PubTabNet) and \Noursrealfintabnet{} (FinTabNet) and recall \Noursrealcord{} on CORD receipt
-photos. On TabRecSet, a source never seen in training, it is the best system that writes a database directly
+photos. On TabRecSet, a source not used in training, it is the best system that writes a database directly
 (\Noursunseentabrecset{}) but trails the 8B HTML pipeline (\NEightbhtmlunseentabrecset{}), mostly in reading text
 from photographs. A variant trained on synthetic data alone matches the synthetic score and fails on real
 images, which locates the value of the real data. Code, model, data and all evaluation outputs are public.
@@ -101,7 +101,7 @@ with every gold dump verified by execution (\S\ref{sec:data}).
 \item \sys-2b, a 2B model with a deterministic verify-and-repair layer, which outperforms 4$\times$ larger models
 of its family on five of six evaluation sets and recovers foreign keys almost perfectly (\S\ref{sec:results}).
 \item An analysis of what transfers: synthetic layouts teach normalization but not reading, a modest converted real
-set closes most of the real-image gap, and on a truly unseen source the remaining gap is reading accuracy rather
+set closes most of the real-image gap, and on a source held out from training the remaining gap is reading accuracy rather
 than structure (\S\ref{sec:results}--\ref{sec:discussion}).
 \end{itemize}
 
@@ -202,7 +202,7 @@ payment lines are not stored.}
 \end{figure*}
 
 \subsection{Rendering databases}
-A \emph{scene} is a small database cut from one of the Spider~\citep{yu2018spider} SQLite files: a single table
+A \emph{scene} is a small database cut from one of the Spider~\citep{yu2018spider} (CC BY-SA 4.0) SQLite files: a single table
 with 3--25 sampled rows and 3--9 columns, two unrelated tables, or a parent row together with 3--15 child rows
 that reference it through a declared foreign key. Columns with long or mostly empty values are dropped, numeric
 strings and integer-valued floats are coerced to numbers, and composite primary keys are not declared.
@@ -226,13 +226,14 @@ order of the image. Splits are made by database: the 146 Spider training databas
 development databases validation, and the 40 databases that appear only in Spider's test set our synthetic test.
 
 \subsection{Converting real annotations}
-PubTabNet~\citep{zhong2020pubtabnet} and FinTabNet~\citep{zheng2021gte} annotate table images with HTML. We expand
-spans into a grid, flatten header rows into names, repeat body rowspans, convert numbers as above and map lone
-dashes to \texttt{NULL}. FinTabNet tables carry no \texttt{thead}; the first row is used as header, and the second
-as well when the first contains group colspans. Tables whose body contains colspans, typically section rows such as
+PubTabNet~\citep{zhong2020pubtabnet} and FinTabNet~\citep{zheng2021gte} (both CDLA-Permissive-1.0) annotate table
+images with HTML. We expand spans into a grid, flatten header rows into names, repeat body rowspans, convert numbers
+as above and map lone dashes to \texttt{NULL}. In the HTML release of FinTabNet we used, tables carry no
+\texttt{thead}; the first row is used as header, and the second as well when the first contains group colspans.
+We use the original FinTabNet annotations, not the corrected FinTabNet.c~\citep{smock2023aligning}. Tables whose body contains colspans, typically section rows such as
 ``Assets'', have no unambiguous relational form and are rejected, as are tables with more than 30 rows or 10
 columns. Of the streamed training tables, 72\% of PubTabNet and 69\% of FinTabNet pass. CORD~\citep{park2019cord}
-receipts become an \texttt{items} table (name, quantity, price) built from the menu annotations.
+(CC BY 4.0) receipts become an \texttt{items} table (name, quantity, price) built from the menu annotations.
 
 \paragraph{Execution check.} Every gold dump, synthetic or converted, is executed and scored against itself; any
 score below 1.0 is a bug in the data. The check found composite keys declared as primary keys, numbers stored as
@@ -252,10 +253,15 @@ foreign key. All splits are released.}
 Besides the synthetic test (150 images per level), we use held-out splits of the real sources: 150 PubTabNet and
 150 FinTabNet validation tables and 60 CORD test receipts with at least two items, plus 150 synthetic receipts.
 These images are unseen, but their style is familiar from training. To measure transfer we also build
-\textbf{TabRecSet-150} from TabRecSet~\citep{yang2023tabrecset} (CC BY 4.0), which was never used for training:
-English original images, one table per image, cropped by its cell polygons, with at least 60\% non-empty cells.
-TabRecSet does not mark header rows, so the first grid row is used as header; 64\% of the inspected tables pass
-the same conversion rules. Table~\ref{tab:data} lists all splits.
+\textbf{TabRecSet-150} from TabRecSet~\citep{yang2023tabrecset,tabrecsetdata} (CC BY 4.0), which we did not use for
+training; since it has been public since 2022, it may have been part of the base model's pre-training. We take
+English original images (not the generated three-line and no-line variants, which repeat the same tables), one
+table per image, cropped by its cell polygons, with at least 60\% non-empty cells. TabRecSet does not mark header
+rows, so the first grid row is used as header; 64\% of the inspected tables pass the same conversion rules. Its
+annotators wrote illegible characters as \texttt{\#}; we keep them in the gold (94 of 4{,}199 cells, in 26 tables).
+Removing these cells from scoring changes cell F1 by less than 0.01 for every system and leaves the ranking
+unchanged. Some images contain handwriting, and three cells contain Chinese characters; neither was filtered.
+Table~\ref{tab:data} lists all splits.
 
 % ------------------------------------------------------------------------------------------------
 \section{Model and repair layer}
@@ -264,8 +270,8 @@ the same conversion rules. Table~\ref{tab:data} lists all splits.
 \paragraph{Model.} \sys-2b is Qwen3-VL-2B-Instruct~\citep{bai2025qwen3vl} with LoRA~\citep{hu2022lora} (rank 64,
 $\alpha=128$, dropout 0.05) on all attention and MLP projections of the language model; the vision encoder is
 frozen. Images are resized to at most 1.31\,MP (about 1{,}280 visual tokens). The loss covers only the answer,
-a fenced SQL block. Training mixes 14k synthetic images (all six levels), 3k synthetic receipts, 10k PubTabNet,
-8k FinTabNet and 795 CORD receipts seen twice: \Nntrainused{} examples, one epoch, effective batch 16, learning rate
+a fenced SQL block. Training mixes 14{,}000 synthetic images (all six levels), 3{,}000 synthetic receipts,
+9{,}999 PubTabNet and 8{,}000 FinTabNet tables, and 795 CORD receipts seen twice: \Nntrainused{} examples, one epoch, effective batch 16, learning rate
 $10^{-4}$ with cosine decay and 3\% warm-up, bf16, 2{,}287 steps in 5.9 hours on one A40. The adapter is merged
 into the base weights for release. A per-device batch of 8 ran out of memory on long batches because of the full
 vocabulary logits, so we used 4 with gradient accumulation of 4.
@@ -299,7 +305,8 @@ evaluation items, and $p$-values from a one-sided paired bootstrap against the s
 databases; PubTabNet, FinTabNet, TabRecSet: cell F1; CORD and synthetic receipts: cell recall; FK recall on the
 synthetic test images that contain a foreign key. Against the best competitor on each set, \sys{} is ahead with
 $p<0.001$ on synthetic, FinTabNet, CORD and synthetic receipts and with $p=\Nprealpubtabnet$ on PubTabNet; on
-TabRecSet the 8B HTML pipeline is ahead with $p<0.001$.}
+TabRecSet the 8B HTML pipeline is ahead by 0.06 (paired 95\% interval of the difference $[0.03, 0.09]$, $p<0.001$;
+Wilcoxon signed-rank $p<0.001$), although the marginal intervals overlap.}
 \label{tab:main}
 \end{table*}
 
@@ -381,7 +388,9 @@ points to a larger base model as the next step rather than more synthetic layout
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/errors_tabrecset.pdf}
-\caption{Outcome categories on TabRecSet-150, a source never used in training.}
+\caption{Outcome categories on TabRecSet-150, a source not used in our training. The thin orange segment is the
+key--value category (\Nerrourskeyvalue{}, \NerrEightbhtmlkeyvalue{} and \NerrEightbsqlkeyvalue{} tables from top
+to bottom); each row sums to 150.}
 \label{fig:errors}
 \end{figure}
 
@@ -434,7 +443,8 @@ items, not training variance.
 
 \paragraph{Limitations.} Handwriting, multi-page tables and tables longer than 30 rows are outside the training
 distribution. Tables whose body contains section rows were excluded from both training and evaluation, so we do
-not know how the model handles them. Charts without value labels are read approximately. All data is English.
+not know how the model handles them. Charts without value labels are read approximately. The data is English,
+apart from a few TabRecSet cells.
 
 \paragraph{Broader impact.} Receipts and invoices may contain personal data; the released data uses public
 datasets whose images were collected and anonymized by their authors. Extraction errors are likely to look
