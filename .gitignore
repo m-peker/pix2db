@@ -13,3 +13,11 @@ preview/
 runs_v1/
 data_v1/
 runs_v2dl/
+paper/cache/
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.blg
+paper/arxiv/

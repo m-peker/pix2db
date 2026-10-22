@@ -66,9 +66,9 @@ alignment. *Recall* is used for receipts because a receipt can legitimately be s
   splits were used for training — unseen images, familiar style.
 - **TabRecSet (unseen)**: 150 English tables from a dataset never used in training (camera photos, scans,
   screenshots). pix2db is the best system that produces a database directly, but the 4× larger 8B model
-  with an HTML pipeline is ahead on cell F1 here. Caveat: TabRecSet does not mark header rows, so the gold
-  treats the first row as the header; for key-value forms ("Circle: …, Division: …") this penalizes systems
-  that normalize the form into one record (as pix2db does) and favors systems that copy the visual grid.
+  with an HTML pipeline is ahead on cell F1 here. An error analysis (see the paper) shows the gap is mostly
+  reading accuracy on photographed text and row segmentation, not layout normalization. TabRecSet does not
+  mark header rows, so the gold treats the first row as the header; this affects only a few key-value tables.
 
 Per-level and per-system details: [`results/v2/`](results/v2/). On the synthetic test, pix2db gets
 0.86–0.95 table exact on every layout level; charts are the weakest area (0.63 exact, 0.88 cell F1).

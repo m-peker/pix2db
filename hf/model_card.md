@@ -95,7 +95,7 @@ model = PeftModel.from_pretrained(base, "musapeker/pix2db-2b", subfolder="adapte
 
 All SQL systems go through the same repair layer. PubTabNet/FinTabNet/CORD numbers are on held-out splits of
 datasets whose train splits were used for training; TabRecSet was never used for training (see the GitHub
-README for the header-row caveat on that set). Evaluation outputs: `eval_runs_v2/` in this repo.
+README; the gap there is mainly reading accuracy on photographed text). Evaluation outputs: `eval_runs_v2/` in this repo.
 
 ## Training
 
