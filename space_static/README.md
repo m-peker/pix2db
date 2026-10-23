@@ -23,3 +23,5 @@ Example images: synthetic renders from this project, and real images from CORD (
 FinTabNet (CDLA-Permissive-1.0) and TabRecSet (CC BY 4.0).
 
 Model: [musapeker/pix2db-2b](https://huggingface.co/musapeker/pix2db-2b) · Code: [github.com/m-peker/pix2db](https://github.com/m-peker/pix2db)
+
+Paper (preprint): [PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B Vision-Language Model](https://doi.org/10.21203/rs.3.rs-11467404/v1)

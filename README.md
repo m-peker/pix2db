@@ -1,9 +1,12 @@
 # pix2db
 
+[![Preprint](https://img.shields.io/badge/preprint-Research%20Square-1f6feb)](https://doi.org/10.21203/rs.3.rs-11467404/v1)
+
 **Image → working SQLite database.** Give it a screenshot or photo of a table, form, invoice, receipt or
 chart; get back `CREATE TABLE` + `INSERT` statements that actually run — with column types, primary keys,
 foreign keys between related tables, and a verify/repair layer that tells you when something looks off.
 
+[📄 Paper](https://doi.org/10.21203/rs.3.rs-11467404/v1) ·
 [🤗 Model](https://huggingface.co/musapeker/pix2db-2b) ·
 [🤗 Demo](https://huggingface.co/spaces/musapeker/pix2db) ·
 [🤗 Dataset](https://huggingface.co/datasets/musapeker/pix2db-data) ·
@@ -123,3 +126,19 @@ evaluation subset is CC BY 4.0.
 OptiSQL (arXiv 2601.13695) generates a SQL *query* from a clean table image; MTabVQA (arXiv 2506.11684) does
 visual QA over rendered tables. pix2db reconstructs the *database itself* — once — so any number of queries run
 deterministically on real SQLite.
+
+## Citation
+
+> Musa Peker. *PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B Vision-Language Model*. Research Square preprint, 2026. [doi:10.21203/rs.3.rs-11467404/v1](https://doi.org/10.21203/rs.3.rs-11467404/v1)
+> (preprint, not peer-reviewed)
+
+```bibtex
+@misc{peker2026pix2db,
+  title        = {PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B Vision-Language Model},
+  author       = {Peker, Musa},
+  year         = {2026},
+  howpublished = {Research Square preprint},
+  doi          = {10.21203/rs.3.rs-11467404/v1},
+  url          = {https://doi.org/10.21203/rs.3.rs-11467404/v1}
+}
+```

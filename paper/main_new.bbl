@@ -1,0 +1,170 @@
+\begin{thebibliography}{34}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Auer et~al.(2024)Auer, Lysak, Nassar, Dolfi, Livathinos, Vagenas, et~al.]{auer2024docling}
+Christoph Auer, Maksym Lysak, Ahmed Nassar, Michele Dolfi, Nikolaos Livathinos, Panos Vagenas, et~al.
+\newblock Docling technical report, 2024.
+
+\bibitem[Bai et~al.(2025)Bai, Cai, Chen, Chen, et~al.]{bai2025qwen3vl}
+Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, et~al.
+\newblock {Qwen3-VL} technical report, 2025.
+
+\bibitem[Blecher et~al.(2023)Blecher, Cucurull, Scialom, and Stojnic]{blecher2023nougat}
+Lukas Blecher, Guillem Cucurull, Thomas Scialom, and Robert Stojnic.
+\newblock Nougat: Neural optical understanding for academic documents, 2023.
+
+\bibitem[Chi et~al.(2019)Chi, Huang, Xu, Yu, Yin, and Mao]{chi2019scitsr}
+Zewen Chi, Heyan Huang, Heng-Da Xu, Houjin Yu, Wanxuan Yin, and Xian-Ling Mao.
+\newblock Complicated table structure recognition, 2019.
+
+\bibitem[Gupta et~al.(2016)Gupta, Vedaldi, and Zisserman]{gupta2016synthtext}
+Ankush Gupta, Andrea Vedaldi, and Andrew Zisserman.
+\newblock Synthetic data for text localisation in natural images.
+\newblock In \emph{Proceedings of CVPR}, 2016.
+
+\bibitem[Hu et~al.(2022)Hu, Shen, Wallis, Allen-Zhu, Li, Wang, Wang, and Chen]{hu2022lora}
+Edward~J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu~Wang, and Weizhu Chen.
+\newblock {LoRA}: Low-rank adaptation of large language models.
+\newblock In \emph{International Conference on Learning Representations}, 2022.
+
+\bibitem[Kim et~al.(2022)Kim, Hong, Yim, Nam, Park, Yim, Hwang, Yun, Han, and Park]{kim2022donut}
+Geewook Kim, Teakgyu Hong, Moonbin Yim, JeongYeon Nam, Jinyoung Park, Jinyeong Yim, Wonseok Hwang, Sangdoo Yun, Dongyoon Han, and Seunghyun Park.
+\newblock {OCR}-free document understanding transformer.
+\newblock In \emph{European Conference on Computer Vision}, 2022.
+
+\bibitem[Kuhn(1955)]{kuhn1955hungarian}
+Harold~W. Kuhn.
+\newblock The {Hungarian} method for the assignment problem.
+\newblock \emph{Naval Research Logistics Quarterly}, 2\penalty0 (1--2):\penalty0 83--97, 1955.
+
+\bibitem[Kwon et~al.(2023)Kwon, Li, Zhuang, Sheng, Zheng, Yu, Gonzalez, Zhang, and Stoica]{kwon2023vllm}
+Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying Sheng, Lianmin Zheng, Cody~Hao Yu, Joseph~E. Gonzalez, Hao Zhang, and Ion Stoica.
+\newblock Efficient memory management for large language model serving with {PagedAttention}.
+\newblock In \emph{Proceedings of SOSP}, 2023.
+
+\bibitem[Lee et~al.(2023)Lee, Joshi, Turc, Hu, Liu, Eisenschlos, Khandelwal, Shaw, Chang, and Toutanova]{lee2023pix2struct}
+Kenton Lee, Mandar Joshi, Iulia Turc, Hexiang Hu, Fangyu Liu, Julian Eisenschlos, Urvashi Khandelwal, Peter Shaw, Ming-Wei Chang, and Kristina Toutanova.
+\newblock {Pix2Struct}: Screenshot parsing as pretraining for visual language understanding.
+\newblock In \emph{International Conference on Machine Learning}, 2023.
+
+\bibitem[Lei et~al.(2025)]{lei2025spider2}
+Fangyu Lei et~al.
+\newblock Spider 2.0: Evaluating language models on real-world enterprise text-to-{SQL} workflows.
+\newblock In \emph{International Conference on Learning Representations}, 2025.
+
+\bibitem[Li et~al.(2023)]{li2023bird}
+Jinyang Li et~al.
+\newblock Can {LLM} already serve as a database interface? {A} {BI}g bench for large-scale database grounded text-to-{SQL}s.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2023.
+
+\bibitem[Li et~al.(2026)Li, Chen, Cai, Chen, Ye, and Wang]{li2026optisql}
+Sifan Li, Hongkai Chen, Yujun Cai, Liyang Chen, Qingwen Ye, and Yiwei Wang.
+\newblock {OptiSQL}: Executable {SQL} generation from optical tokens, 2026.
+
+\bibitem[Liu et~al.(2023{\natexlab{a}})Liu, Eisenschlos, Piccinno, Krichene, Pang, Lee, Joshi, Chen, Collier, and Altun]{liu2023deplot}
+Fangyu Liu, Julian~Martin Eisenschlos, Francesco Piccinno, Syrine Krichene, Chenxi Pang, Kenton Lee, Mandar Joshi, Wenhu Chen, Nigel Collier, and Yasemin Altun.
+\newblock {DePlot}: One-shot visual language reasoning by plot-to-table translation.
+\newblock In \emph{Findings of ACL}, 2023{\natexlab{a}}.
+
+\bibitem[Liu et~al.(2023{\natexlab{b}})Liu, Piccinno, Krichene, Pang, Lee, Joshi, Altun, Collier, and Eisenschlos]{liu2023matcha}
+Fangyu Liu, Francesco Piccinno, Syrine Krichene, Chenxi Pang, Kenton Lee, Mandar Joshi, Yasemin Altun, Nigel Collier, and Julian~Martin Eisenschlos.
+\newblock {MatCha}: Enhancing visual language pretraining with math reasoning and chart derendering.
+\newblock In \emph{Proceedings of ACL}, 2023{\natexlab{b}}.
+
+\bibitem[Long et~al.(2021)Long, Wang, Xue, Gao, Yang, Wang, and Xia]{long2021wtw}
+Rujiao Long, Wen Wang, Nan Xue, Feiyu Gao, Zhibo Yang, Yongpan Wang, and Gui-Song Xia.
+\newblock Parsing table structures in the wild.
+\newblock In \emph{Proceedings of ICCV}, 2021.
+
+\bibitem[Masry et~al.(2022)Masry, Long, Tan, Joty, and Hoque]{masry2022chartqa}
+Ahmed Masry, Do~Xuan Long, Jia~Qing Tan, Shafiq Joty, and Enamul Hoque.
+\newblock {ChartQA}: A benchmark for question answering about charts with visual and logical reasoning.
+\newblock In \emph{Findings of ACL}, 2022.
+
+\bibitem[Masry et~al.(2023)Masry, Kavehzadeh, Do, Hoque, and Joty]{masry2023unichart}
+Ahmed Masry, Parsa Kavehzadeh, Xuan~Long Do, Enamul Hoque, and Shafiq Joty.
+\newblock {UniChart}: A universal vision-language pretrained model for chart comprehension and reasoning.
+\newblock In \emph{Proceedings of EMNLP}, 2023.
+
+\bibitem[Mathew et~al.(2021)Mathew, Karatzas, and Jawahar]{mathew2021docvqa}
+Minesh Mathew, Dimosthenis Karatzas, and C.~V. Jawahar.
+\newblock {DocVQA}: A dataset for {VQA} on document images.
+\newblock In \emph{IEEE/CVF Winter Conference on Applications of Computer Vision}, 2021.
+
+\bibitem[Methani et~al.(2020)Methani, Ganguly, Khapra, and Kumar]{methani2020plotqa}
+Nitesh Methani, Pritha Ganguly, Mitesh~M. Khapra, and Pratyush Kumar.
+\newblock {PlotQA}: Reasoning over scientific plots.
+\newblock In \emph{IEEE/CVF Winter Conference on Applications of Computer Vision}, 2020.
+
+\bibitem[Nassar et~al.(2022)Nassar, Livathinos, Lysak, and Staar]{nassar2022tableformer}
+Ahmed Nassar, Nikolaos Livathinos, Maksym Lysak, and Peter Staar.
+\newblock {TableFormer}: Table structure understanding with transformers.
+\newblock In \emph{Proceedings of CVPR}, 2022.
+
+\bibitem[Park et~al.(2019)Park, Shin, Lee, Lee, Surh, Seo, and Lee]{park2019cord}
+Seunghyun Park, Seung Shin, Bado Lee, Junyeop Lee, Jaeheung Surh, Minjoon Seo, and Hwalsuk Lee.
+\newblock {CORD}: A consolidated receipt dataset for post-{OCR} parsing.
+\newblock In \emph{Document Intelligence Workshop at NeurIPS}, 2019.
+
+\bibitem[Poznanski et~al.(2025)Poznanski, Rangapur, Borchardt, Dunkelberger, Huff, Lin, Wilhelm, Lo, and Soldaini]{poznanski2025olmocr}
+Jake Poznanski, Aman Rangapur, Jon Borchardt, Jason Dunkelberger, Regan Huff, Daniel Lin, Christopher Wilhelm, Kyle Lo, and Luca Soldaini.
+\newblock {olmOCR}: Unlocking trillions of tokens in {PDFs} with vision language models, 2025.
+
+\bibitem[Singh et~al.(2025{\natexlab{a}})Singh, Biemann, and Strich]{singh2025mtabvqa}
+Anshul Singh, Chris Biemann, and Jan Strich.
+\newblock {MTabVQA}: Evaluating multi-tabular reasoning of language models in visual space, 2025{\natexlab{a}}.
+
+\bibitem[Singh et~al.(2025{\natexlab{b}})Singh, Chaudhary, Singh, and Kumary]{singh2025lost}
+Anshul Singh, Rohan Chaudhary, Gagneet Singh, and Abhay Kumary.
+\newblock Lost in translation and noise: A deep dive into the failure modes of {VLMs} on real-world tables, 2025{\natexlab{b}}.
+
+\bibitem[Smock et~al.(2022)Smock, Pesala, and Abraham]{smock2022pubtables}
+Brandon Smock, Rohith Pesala, and Robin Abraham.
+\newblock {PubTables-1M}: Towards comprehensive table extraction from unstructured documents.
+\newblock In \emph{Proceedings of CVPR}, 2022.
+
+\bibitem[Smock et~al.(2023)Smock, Pesala, and Abraham]{smock2023aligning}
+Brandon Smock, Rohith Pesala, and Robin Abraham.
+\newblock Aligning benchmark datasets for table structure recognition.
+\newblock In \emph{International Conference on Document Analysis and Recognition}, 2023.
+
+\bibitem[Wei et~al.(2024)Wei, Liu, Chen, Wang, Kong, Xu, Ge, Zhao, Sun, Peng, Han, and Zhang]{wei2024got}
+Haoran Wei, Chenglong Liu, Jinyue Chen, Jia Wang, Lingyu Kong, Yanming Xu, Zheng Ge, Liang Zhao, Jianjian Sun, Yuang Peng, Chunrui Han, and Xiangyu Zhang.
+\newblock General {OCR} theory: Towards {OCR}-2.0 via a unified end-to-end model, 2024.
+
+\bibitem[Yang et~al.(2023{\natexlab{a}})Yang, Hu, Liu, Huang, and Gu]{tabrecsetdata}
+Fan Yang, Lei Hu, Xinwu Liu, Shuangping Huang, and Zhenghui Gu.
+\newblock {TabRecSet}: A large scale dataset for end-to-end table recognition in the wild.
+\newblock figshare dataset, 2023{\natexlab{a}}.
+
+\bibitem[Yang et~al.(2023{\natexlab{b}})Yang, Hu, Liu, Huang, and Gu]{yang2023tabrecset}
+Fan Yang, Lei Hu, Xinwu Liu, Shuangping Huang, and Zhenghui Gu.
+\newblock A large-scale dataset for end-to-end table recognition in the wild.
+\newblock \emph{Scientific Data}, 2023{\natexlab{b}}.
+\newblock \doi{10.1038/s41597-023-01985-8}.
+
+\bibitem[Yu et~al.(2018)Yu, Zhang, Yang, Yasunaga, Wang, Li, Ma, Li, Yao, Roman, Zhang, and Radev]{yu2018spider}
+Tao Yu, Rui Zhang, Kai Yang, Michihiro Yasunaga, Dongxu Wang, Zifan Li, James Ma, Irene Li, Qingning Yao, Shanelle Roman, Zilin Zhang, and Dragomir Radev.
+\newblock Spider: A large-scale human-labeled dataset for complex and cross-domain semantic parsing and text-to-{SQL} task.
+\newblock In \emph{Proceedings of EMNLP}, 2018.
+
+\bibitem[Zheng et~al.(2024)Zheng, Feng, Si, She, Lin, Jiang, and Wang]{zheng2024multimodal}
+Mingyu Zheng, Xinwei Feng, Qingyi Si, Qiaoqiao She, Zheng Lin, Wenbin Jiang, and Weiping Wang.
+\newblock Multimodal table understanding.
+\newblock In \emph{Proceedings of ACL}, 2024.
+
+\bibitem[Zheng et~al.(2021)Zheng, Burdick, Popa, Zhong, and Wang]{zheng2021gte}
+Xinyi Zheng, Douglas Burdick, Lucian Popa, Xu~Zhong, and Nancy Xin~Ru Wang.
+\newblock Global table extractor ({GTE}): A framework for joint table identification and cell structure recognition using visual context.
+\newblock In \emph{IEEE/CVF Winter Conference on Applications of Computer Vision}, 2021.
+
+\bibitem[Zhong et~al.(2020)Zhong, ShafieiBavani, and Jimeno~Yepes]{zhong2020pubtabnet}
+Xu~Zhong, Elaheh ShafieiBavani, and Antonio Jimeno~Yepes.
+\newblock Image-based table recognition: Data, model, and evaluation.
+\newblock In \emph{European Conference on Computer Vision}, 2020.
+
+\end{thebibliography}

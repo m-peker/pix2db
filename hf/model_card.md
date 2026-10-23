@@ -24,6 +24,7 @@ into a **SQLite dump that runs**: `CREATE TABLE` with types and keys, `FOREIGN K
 (e.g. invoice header ↔ line items), and `INSERT`s for every row. Merged cells are expanded, multi-level headers
 flattened, thousand separators / currency / accounting negatives normalized, dates written as ISO.
 
+Paper (preprint): [doi:10.21203/rs.3.rs-11467404/v1](https://doi.org/10.21203/rs.3.rs-11467404/v1) ·
 Code, repair layer and evaluation: **https://github.com/m-peker/pix2db** ·
 Demo: [Space](https://huggingface.co/spaces/musapeker/pix2db) ·
 [Colab](https://colab.research.google.com/github/m-peker/pix2db/blob/main/notebooks/pix2db_colab.ipynb)
@@ -114,3 +115,19 @@ value labels are approximate; table/column names are chosen by the model.
 
 Apache-2.0. Training data derived from Spider (CC BY-SA 4.0), PubTabNet & FinTabNet (CDLA-Permissive-1.0),
 CORD (CC BY 4.0).
+
+## Citation
+
+> Musa Peker. *PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B Vision-Language Model*. Research Square preprint, 2026. [doi:10.21203/rs.3.rs-11467404/v1](https://doi.org/10.21203/rs.3.rs-11467404/v1)
+> (preprint, not peer-reviewed)
+
+```bibtex
+@misc{peker2026pix2db,
+  title        = {PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B Vision-Language Model},
+  author       = {Peker, Musa},
+  year         = {2026},
+  howpublished = {Research Square preprint},
+  doi          = {10.21203/rs.3.rs-11467404/v1},
+  url          = {https://doi.org/10.21203/rs.3.rs-11467404/v1}
+}
+```

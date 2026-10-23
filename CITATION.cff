@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use pix2db, please cite the preprint below."
+title: "pix2db"
+authors:
+  - family-names: Peker
+    given-names: Musa
+    affiliation: "Ozveri R&D Center, Ozdilek Home Textile Industry and Trade Inc., Bursa, Türkiye"
+repository-code: "https://github.com/m-peker/pix2db"
+license: Apache-2.0
+preferred-citation:
+  type: article
+  title: "PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B Vision-Language Model"
+  authors:
+    - family-names: Peker
+      given-names: Musa
+      affiliation: "Ozveri R&D Center, Ozdilek Home Textile Industry and Trade Inc., Bursa, Türkiye"
+  year: 2026
+  doi: "10.21203/rs.3.rs-11467404/v1"
+  url: "https://doi.org/10.21203/rs.3.rs-11467404/v1"
+  notes: "Research Square preprint, not peer-reviewed"

@@ -21,7 +21,8 @@ size_categories:
 
 Images of tables, forms, invoices, receipts and charts paired with a **gold SQLite database** (`sql` column:
 `CREATE TABLE` + `INSERT`, ready to run). Used to train and evaluate
-[pix2db-2b](https://huggingface.co/musapeker/pix2db-2b). Code: https://github.com/m-peker/pix2db
+[pix2db-2b](https://huggingface.co/musapeker/pix2db-2b). Code: https://github.com/m-peker/pix2db ·
+Paper (preprint): [doi:10.21203/rs.3.rs-11467404/v1](https://doi.org/10.21203/rs.3.rs-11467404/v1)
 
 Each row: `image`, `id`, `level`, `level_name`, `kind`, `source_db`, `sql` (gold dump), `scene` (gold as JSON),
 `num_tol_abs` (numeric tolerance, charts without value labels), `recall_only` (score with recall).
@@ -56,3 +57,21 @@ tables with body colspans (section rows) are excluded because they have no unamb
 
 Spider (Yu et al., 2018), PubTabNet (Zhong et al., 2020), FinTabNet (Zheng et al., 2021), CORD (Park et al.,
 2019), TabRecSet (Yang et al., Scientific Data 2023). Please cite the original datasets when using these splits.
+
+## Citation
+
+If you use this dataset, please cite the paper below and the original datasets listed above.
+
+> Musa Peker. *PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B Vision-Language Model*. Research Square preprint, 2026. [doi:10.21203/rs.3.rs-11467404/v1](https://doi.org/10.21203/rs.3.rs-11467404/v1)
+> (preprint, not peer-reviewed)
+
+```bibtex
+@misc{peker2026pix2db,
+  title        = {PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B Vision-Language Model},
+  author       = {Peker, Musa},
+  year         = {2026},
+  howpublished = {Research Square preprint},
+  doi          = {10.21203/rs.3.rs-11467404/v1},
+  url          = {https://doi.org/10.21203/rs.3.rs-11467404/v1}
+}
+```
