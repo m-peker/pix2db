@@ -51,8 +51,8 @@ def write(g):
       "output is still a layout. Turning it into something a program can query requires decisions that markup "
       "leaves open: which rows a merged cell belongs to, how a two-level header becomes a column name, whether "
       "\"(1,209)\" is a negative number, and which of two tables on a page refers to the other.")
-    P("The problem addressed here is therefore not table recognition but the relational step that follows it, "
-      "performed directly from pixels. Prompting a general model does not solve it. In a pilot study with 150 "
+    P("This study addresses the relational step that follows recognition and performs it directly from pixels. "
+      "Prompting a general model is not enough. In a pilot study with 150 "
       "rendered images, Qwen3-VL-8B [[bai2025qwen3vl]] produced an executable SQL dump for 93% of the images but a "
       "completely correct table for only 61%; the same model asked for HTML, converted to SQLite by a short script, "
       "reached 46% and failed precisely on merged cells and forms. The errors were rarely misread characters. The "
@@ -60,12 +60,12 @@ def write(g):
       "such as <code>O'Brien</code> without escaping, so that one malformed row invalidated an entire statement. The "
       "closest prior work, OptiSQL [[li2026optisql]], generates one SQL query per question from a clean table image "
       "and never reconstructs the database.")
-    P("This study proposes PIX2DB, a 2B-parameter model that writes the relational decisions into its output. "
-      "Given an image, it produces a SQLite dump: <code>CREATE TABLE</code> statements with column types, primary "
-      "and foreign keys, followed by <code>INSERT</code> statements for every record. A deterministic "
-      "verify-and-repair layer executes the dump, repairs common syntactic failures and reports suspicious content. "
-      "Figure 1 shows a rendered document from a database that was not used for training and the dump written by the "
-      "model. The main contributions are:")
+    P("We propose PIX2DB, a 2B-parameter model whose output already contains these decisions. Given an image, it "
+      "writes a SQLite dump with <code>CREATE TABLE</code> statements (column types, primary and foreign keys) "
+      "followed by <code>INSERT</code> statements for every record. A deterministic verify-and-repair layer then "
+      "executes the dump, fixes common syntactic failures and flags suspicious content. Figure 1 shows a rendered "
+      "document from one of the test databases together with the dump written by the model. The main contributions "
+      "are:")
     NUM(["A task definition for image-to-database reconstruction with explicit normalization conventions, and an "
          "evaluation protocol that aligns predicted and gold databases without relying on table or column names.",
          "A data construction method that yields exact gold databases at scale, by rendering samples of real "
@@ -74,10 +74,9 @@ def write(g):
          "PIX2DB-2b, a LoRA-adapted 2B model with a deterministic repair layer, which outperforms models of the same "
          "family with four times more parameters on five of six evaluation sets and recovers foreign keys almost "
          "perfectly.",
-         "An analysis of what transfers: rendered layouts teach the conventions but not robust reading, a modest set "
-         "of converted real tables closes most of the real-image gap, and on a held-out source the remaining gap is "
-         "reading accuracy rather than structure."])
-    figure(FIG / "teaser.png", "A rendered document from a database not used for training (a) and the SQLite dump "
+         "Ablations of the training data and the repair layer, and an error analysis on a dataset that was not used "
+         "for training."])
+    figure(FIG / "teaser.png", "A rendered document from a test database (a) and the SQLite dump "
            "written by PIX2DB (b). The key–value header becomes its own table, the merged <i>Owner user id</i> cell "
            "is repeated in every item row, and the relation between the two blocks is stated as a foreign key.")
     P("The rest of the paper is organized as follows. Section 2 reviews related work. Section 3 defines the task and "
@@ -97,9 +96,9 @@ def write(g):
       "PubTables-1M [[smock2022pubtables]] and the corrected FinTabNet.c [[smock2023aligning]] improved annotation "
       "consistency. SciTSR [[chi2019scitsr]] targets complicated scientific tables, while WTW [[long2021wtw]] and "
       "TabRecSet [[yang2023tabrecset]] cover photographed tables in the wild. TableFormer "
-      "[[nassar2022tableformer]] and the PubTables-1M detector predict structure and rely on PDF text or OCR for "
-      "content. A grid is a faithful description of the layout, not of the data: TEDS rewards reproducing a "
-      "rowspan, whereas a database must resolve it into repeated values.")
+      "[[nassar2022tableformer]] and the PubTables-1M detector predict structure and take the cell text from the "
+      "PDF or from OCR. Under TEDS, a reproduced rowspan counts as correct, although a database would need the "
+      "spanned value in every row.")
     H2("2.2. OCR-Free Document Models and Charts")
     P("Layout-aware pre-training such as LayoutLM [[xu2020layoutlm]] and LayoutLMv3 [[huang2022layoutlmv3]] "
       "combines OCR tokens with visual features. Donut [[kim2022donut]] and Pix2Struct [[lee2023pix2struct]] showed "
@@ -129,7 +128,8 @@ def write(g):
       "rendered samples of real relational databases and converted annotations of real table and receipt images. A "
       "2B VLM is adapted with LoRA to write the dump, and at inference time its output passes through a "
       "verify-and-repair layer before it is loaded into SQLite.")
-    figure(FIG / "method.png", "Overview of PIX2DB: training data construction (top) and inference (bottom).")
+    figure(FIG / "method.png", "Overview of PIX2DB. (a) Two sources of training pairs and LoRA fine-tuning; "
+           "(b) inference with the verify-and-repair layer.")
     H2("3.1. Task Definition")
     P("For an image <i>I</i>, the system outputs a SQL text <i>D</i>. The prediction is the database obtained by "
       "executing the <code>CREATE TABLE</code> and <code>INSERT</code> statements of <i>D</i> in an empty SQLite "
@@ -211,8 +211,7 @@ def write(g):
        "PubTabNet and 8,000 FinTabNet tables, and 795 CORD receipts seen twice, for a total of 36,589 examples. "
        "Images are resized to at most 1.31 MP (about 1,280 visual tokens). Optimization uses AdamW with a learning "
        "rate of 10<sup>−4</sup>, cosine decay, 3% warm-up, an effective batch of 16, bf16 precision and one epoch "
-       "(2,287 steps, 5.9 h on one NVIDIA A40). A per-device batch of 8 exhausted memory on long batches because of "
-       "the full-vocabulary logits, so a batch of 4 with gradient accumulation of 4 was used. After training, the "
+       "(2,287 steps, 5.9 h on one NVIDIA A40); further settings are listed in Appendix C. After training, the "
        "update of Eq. (1) is merged into the base weights.")
     H2("3.4. Verify-and-Repair Layer")
     P("The model output passes through a deterministic layer before it is returned (Algorithm 1). Statements are "
@@ -332,8 +331,7 @@ def write(g):
       f"were written as bare numbers, a format that never occurs in Spider; in other cases the model looped on a "
       f"<code>CREATE TABLE</code> statement it could not finish. Adding 18,794 converted real tables and receipts "
       f"removes these failures without costing synthetic accuracy and lifts TabRecSet from {N['voneunseentabrecset']} "
-      f"to {N['oursunseentabrecset']}. The synthetic data teaches the conventions; the real data teaches what real "
-      f"cell contents look like.")
+      f"to {N['oursunseentabrecset']}.")
     H2("4.5. Effect of the Repair Layer")
     figure(FIG / "ablation_repair.png", "Share of executable outputs and cell F1 before and after the repair layer, "
            "pooled over all evaluation sets.", 0.62)
@@ -344,7 +342,7 @@ def write(g):
       f"(Appendix B, Table A1). The repair layer is no substitute for training: applied to the base model it leaves F1 "
       f"at {N['repTwobfOnerep']}, far below the fine-tuned model without repair ({N['repoursfOneraw']}).")
     H2("4.6. Error Analysis on an Unseen Source")
-    figure(FIG / "errors_tabrecset.png", f"Outcome categories on TabRecSet-150, a source not used for training. The "
+    figure(FIG / "errors_tabrecset.png", f"Outcome categories on TabRecSet-150. The "
            f"thin orange segment is the key–value category ({N['errourskeyvalue']}, {N['errEightbhtmlkeyvalue']} and "
            f"{N['errEightbsqlkeyvalue']} tables from top to bottom); each row sums to 150.", 0.62)
     P(f"TabRecSet-150 is the only set on which PIX2DB loses ({N['oursunseentabrecset']} against "
@@ -354,10 +352,8 @@ def write(g):
       f"questionable, account for only {N['nkv']} tables and do not explain the gap. The largest bucket for all systems "
       f"is cell content ({N['errourscell']} for PIX2DB, {N['errEightbhtmlcell']} for the HTML pipeline): the rows are "
       f"found but text in photographed, skewed or low-resolution tables is misread. PIX2DB also segments rows wrongly "
-      f"more often ({N['erroursrow']} against {N['errEightbhtmlrow']}). The "
-      f"8B model reads these images better than the 2B model it is compared with, and the HTML route spends no "
-      f"capacity on normalization. On this source the bottleneck is reading, which points to a larger base model as "
-      f"the next step rather than more synthetic layouts.")
+      f"more often ({N['erroursrow']} against {N['errEightbhtmlrow']}). Both differences concern reading the image "
+      f"rather than organizing its content, and that is where the larger model has the advantage.")
     H2("4.7. Column Types and Cost")
     types = [[clean(c) for c in r] for r in tex_rows("types.tex")]
     types[0][0] = "PIX2DB-2b (ours)"
@@ -373,13 +369,13 @@ def write(g):
       f"{N['tokhtml']} for HTML), which together with its size makes it the fastest system: 0.09 s per image amortized "
       f"over a vLLM batch on one A40. Training and every evaluation in this study used about 12 GPU-hours.")
     H2("4.8. Discussion")
-    P("<i>Conventions are cheap to learn; reading is not.</i> The decisions that turn a layout into a database are "
-      "few and regular. General VLMs know them but apply them inconsistently: the 8B model declares three quarters of "
-      "the foreign keys and resolves merged cells correctly about two times in three. A small model trained on a few "
-      "tens of thousands of exact examples applies them almost every time. Reading text is different. The "
-      "synthetic-only model read rendered text well and real text poorly, and on TabRecSet a larger general model "
-      "still reads better than the fine-tuned small one. The recipe is expected to carry over to a 4B or 8B base with "
-      "little change, and the TabRecSet gap to shrink accordingly.")
+    P("<i>Structure and reading.</i> The decisions that turn a layout into a database are few and regular. General "
+      "VLMs know them but apply them inconsistently; the 8B model declares three quarters of the foreign keys and "
+      "resolves merged cells correctly about two times in three. After training on a few tens of thousands of exact "
+      "examples, the 2B model applies them almost every time. Reading behaves differently. The synthetic-only model "
+      "read rendered text well and real text poorly (Section 4.4), and on TabRecSet the larger general model still "
+      "reads photographed text better (Section 4.6). Since nothing in the data recipe depends on the size of the base "
+      "model, training a 4B or 8B variant is the most direct way to close the remaining gap.")
     P("<i>Validity of the evaluation.</i> The metric ignores names, so a schema with unhelpful column names scores as "
       "well as a good one; naming quality is not measured. The real held-out sets share their sources with the "
       "training data and therefore overstate performance on unfamiliar documents, which is why TabRecSet is reported "
@@ -419,30 +415,27 @@ def write(g):
           "Capability comparison with prior work, as described in the respective papers (◐: partly, or for a subset "
           "of inputs; –: not applicable). Donut-style parsers emit task-specific JSON fields; OptiSQL emits a query "
           "against an existing database.", bold_rows=(5,), head_size=15)
-    P("Quantitatively, the strongest alternative in this study is a large general model combined with an HTML "
-      "conversion script. It is competitive on flat tables and slightly better on photographed tables from an unseen "
-      "source, but it cannot express relations (FK recall 0.00), it loses most of its accuracy on merged cells, "
-      "forms and scans, and its type inference leaves formatted numbers as text. PIX2DB reaches higher accuracy with "
-      "a model four times smaller, writes outputs half as long and runs about four times faster per image. Its "
-      "advantage comes from making the relational decisions part of the learned output, which no prior method in "
-      "Table 4 does.")
+    P("Among the systems evaluated here, the 8B model followed by an HTML conversion script is the strongest "
+      "baseline for turning a table image into SQLite without task-specific training. Section 4 "
+      "located its limits: it has no way to express relations between tables, it breaks on merged cells, forms and "
+      "scans, and it inherits the type inference of the conversion library. Its advantage on TabRecSet shows that "
+      "a larger encoder still matters for unfamiliar photographs. PIX2DB is the only entry in Table 4 that learns "
+      "the relational decisions as part of its output, and it does so with a model small enough to process an image "
+      "in under a tenth of a second on a single GPU.")
 
     # ================================================================== 6. Conclusions
     H1("6. Conclusions")
-    P("This study introduced image-to-database reconstruction and PIX2DB, a 2B vision-language model that turns a "
-      "document image into an executable SQLite database. Training pairs with exact gold databases were obtained by "
-      "rendering samples of real relational databases at six layout levels and by converting existing table and "
-      "receipt annotations under the same conventions. With a deterministic verify-and-repair layer, the model "
-      "reaches 0.86 table exact match and 0.99 foreign-key recall on rendered tables from unseen databases, cell F1 of "
-      "0.81 and 0.96 on held-out PubTabNet and FinTabNet tables and recall of 0.93 on receipt photographs, "
-      "outperforming models of the same family with four times more parameters on five of six evaluation sets.")
-    P("Three findings follow from the experiments. First, the relational conventions (resolving merged cells, "
-      "separating forms from item tables, typing values and declaring foreign keys) are learned reliably by a small "
-      "model, whereas general models apply them inconsistently. Second, rendered data teaches these conventions but "
-      "not robust reading; a modest amount of converted real data closes most of the gap to real images. Third, on a "
-      "source held out from training the remaining weakness is reading text in photographs rather than structure. "
-      "Future work will apply the recipe to larger base models, add handwritten and multi-page documents and section "
-      "rows, and improve chart reading. The model, data, code and all evaluation outputs are publicly available.")
+    P("This study defined image-to-database reconstruction and presented PIX2DB, a 2B vision-language model that "
+      "turns a document image into an executable SQLite database. Its training pairs come with exact gold databases, "
+      "obtained by rendering parts of the Spider databases and by converting existing table and receipt "
+      "annotations under one set of conventions. Together with a deterministic verify-and-repair layer, the model "
+      "outperforms models of its family with up to four times more parameters on five of six evaluation sets, and it "
+      "is the only system tested that recovers foreign keys reliably.")
+    P("The experiments separate two abilities. Organizing a table into records, types and relations was learned "
+      "from a modest amount of exact data, whereas reading text in unfamiliar photographs remained the main source "
+      "of error. Future work will therefore train larger base models with the same recipe and extend the data to "
+      "handwriting, multi-page tables, section rows and charts without value labels. The model, data, code and all "
+      "evaluation outputs are publicly available.")
 
     # ================================================================== back matter
     BACK("Author Contributions", "M.P.: conceptualization, methodology, software, data curation, investigation, "
