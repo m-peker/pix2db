@@ -3,8 +3,9 @@
 TITLE = ("PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B "
          "Vision-Language Model")
 AFFILIATION = ("Ozveri R&amp;D Center, Ozdilek Home Textile Industry and Trade Inc., [postal address], Bursa, "
-               "Türkiye; e-mail: msapeker@gmail.com")
-CORRESPONDING = "Corresponding Author: Musa Peker (msapeker@gmail.com)"
+               "Türkiye; e-mail: musa.peker@ozdilek.com.tr")
+CORRESPONDING = "Corresponding Author: Musa Peker (musa.peker@ozdilek.com.tr)"
+ORCID = "0000-0002-6495-9187"
 KEYWORDS = ("Document understanding; Image-to-SQL; Relational schema reconstruction; Synthetic data; "
             "Table extraction; Vision-language models")
 ABSTRACT = (
@@ -445,11 +446,7 @@ def write(g):
          "dataset with all training and evaluation splits at https://huggingface.co/datasets/musapeker/pix2db-data, "
          "and the code, evaluation outputs and figure scripts at https://github.com/m-peker/pix2db. An interactive "
          "demonstration is available at https://huggingface.co/spaces/musapeker/pix2db.")
-    BACK("Acknowledgments", f"A preprint of this manuscript is available on Research Square: {g['PREPRINT']}. The "
-         "author used Claude (Anthropic), an AI assistant, for support in software development, experiment "
-         "orchestration, data analysis scripts, figure generation and language editing. The research idea, the "
-         "experimental design decisions and the interpretation of the results were reviewed and approved by the "
-         "author, who takes full responsibility for the content of this article.")
+    BACK("Acknowledgments", f"A preprint of this manuscript is available on Research Square: {g['PREPRINT']}.")
     BACK("Conflicts of Interest", "The author declares no conflict of interest.")
 
     # ================================================================== appendices (placed after references)

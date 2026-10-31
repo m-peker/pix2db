@@ -249,10 +249,16 @@ head, rest = doc.split("<w:body>", 1)
 items = re.findall(r"<w:p[ >].*?</w:p>|<w:tbl>.*?</w:tbl>|<w:sectPr.*?</w:sectPr>", rest, re.S)
 sect = items[-1]
 first = items[:10]
+# ORCID icon: reuse the template's own icon run from the author line, linked to the author's ORCID record
+orcid_run = re.search(r"<w:r(?: [^>]*)?>(?:(?!</w:r>).)*?<w:drawing>.*?</w:drawing></w:r>", first[2], re.S).group(0)
+orcid_run = re.sub(r"<wp:docPr ([^>]*?)/>",
+                   r'<wp:docPr \1><a:hlinkClick xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+                   r'r:id="rIdORCID"/></wp:docPr>', orcid_run, count=1)
 title_block = [
     para("articletypeFAITH", "Research Article"),
     para("JournalTitleFAITH", manuscript.TITLE),
-    f'<w:p><w:pPr><w:pStyle w:val="AuthorNamesFAITH"/></w:pPr>{runs("Musa Peker ")}{runs("<sup>1,*</sup>")}</w:p>',
+    f'<w:p><w:pPr><w:pStyle w:val="AuthorNamesFAITH"/></w:pPr>{runs("Musa Peker ")}{runs("<sup>1,*</sup>")}'
+    f'<w:hyperlink r:id="rIdORCID">{orcid_run}</w:hyperlink></w:p>',
     first[3],  # history / copyright box, filled by the journal
     f'<w:p><w:pPr><w:pStyle w:val="authoraffiliationFAITH"/></w:pPr>{runs("<sup>1</sup>")}<w:r><w:tab/></w:r>'
     f'{runs(manuscript.AFFILIATION)}</w:p>',
@@ -274,6 +280,8 @@ for rid, path in MEDIA:
     target = f"media/p2d_{path.name}"
     shutil.copy(path, WORK / "word" / target)
     add.append(f'<Relationship Id="{rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="{target}"/>')
+add.append('<Relationship Id="rIdORCID" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/'
+           f'hyperlink" Target="https://orcid.org/{manuscript.ORCID}" TargetMode="External"/>')
 rels_p.write_text(rels.replace("</Relationships>", "".join(add) + "</Relationships>"), encoding="utf-8")
 ct_p = WORK / "[Content_Types].xml"
 ct = ct_p.read_text(encoding="utf-8")
