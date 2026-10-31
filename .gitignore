@@ -21,3 +21,4 @@ paper/*.fls
 paper/*.fdb_latexmk
 paper/*.blg
 paper/arxiv/
+paper/journal/_build/

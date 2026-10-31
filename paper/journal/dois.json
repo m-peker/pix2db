@@ -1,0 +1,576 @@
+{
+ "yu2018spider": {
+  "doi": "10.18653/v1/d18-1425",
+  "title": "Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-SQL Task",
+  "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing",
+  "year": 2018,
+  "type": "proceedings-article",
+  "pages": "3911-3921",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Tao Yu",
+   "Rui Zhang",
+   "Kai Yang",
+   "Michihiro Yasunaga",
+   "Dongxu Wang",
+   "Zifan Li",
+   "James Ma",
+   "Irene Li",
+   "Qingning Yao",
+   "Shanelle Roman",
+   "Zilin Zhang",
+   "Dragomir Radev"
+  ],
+  "score": 1.0
+ },
+ "li2023bird": {
+  "doi": "10.52202/075280-1835",
+  "title": "Can LLM Already Serve as A Database Interface? A BIg Bench for Large-Scale Database Grounded Text-to-SQLs",
+  "venue": "Advances in Neural Information Processing Systems 36",
+  "year": 2023,
+  "type": "proceedings-article",
+  "pages": "42330-42357",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Jinyang Li",
+   "Binyuan Hui",
+   "Ge Qu",
+   "Jiaxi Yang",
+   "Binhua Li",
+   "Bowen Li",
+   "Bailin Wang",
+   "Bowen Qin",
+   "Ruiying Geng",
+   "Nan Huo",
+   "Xuanhe Zhou",
+   "Ma Chenhao",
+   "Guoliang Li",
+   "Kevin Chang",
+   "Fei Huang",
+   "Reynold Cheng",
+   "Yongbin Li"
+  ],
+  "score": 1.0
+ },
+ "kwon2023vllm": {
+  "doi": "10.1145/3600006.3613165",
+  "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+  "venue": "Proceedings of the 29th Symposium on Operating Systems Principles",
+  "year": 2023,
+  "type": "proceedings-article",
+  "pages": "611-626",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Woosuk Kwon",
+   "Zhuohan Li",
+   "Siyuan Zhuang",
+   "Ying Sheng",
+   "Lianmin Zheng",
+   "Cody Hao Yu",
+   "Joseph Gonzalez",
+   "Hao Zhang",
+   "Ion Stoica"
+  ],
+  "score": 1.0
+ },
+ "zhong2020pubtabnet": {
+  "doi": "10.1007/978-3-030-58589-1_34",
+  "title": "Image-Based Table Recognition: Data, Model, and Evaluation",
+  "venue": "Lecture Notes in Computer Science",
+  "year": 2020,
+  "type": "book-chapter",
+  "pages": "564-580",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Xu Zhong",
+   "Elaheh ShafieiBavani",
+   "Antonio Jimeno Yepes"
+  ],
+  "score": 1.0
+ },
+ "zheng2021gte": {
+  "doi": "10.1109/wacv48630.2021.00074",
+  "title": "Global Table Extractor (GTE): A Framework for Joint Table Identification and Cell Structure Recognition Using Visual Context",
+  "venue": "2021 IEEE Winter Conference on Applications of Computer Vision (WACV)",
+  "year": 2021,
+  "type": "proceedings-article",
+  "pages": "697-706",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Xinyi Zheng",
+   "Douglas Burdick",
+   "Lucian Popa",
+   "Xu Zhong",
+   "Nancy Xin Ru Wang"
+  ],
+  "score": 1.0
+ },
+ "yang2023tabrecset": {
+  "doi": "10.1038/s41597-023-01985-8",
+  "title": "A large-scale dataset for end-to-end table recognition in the wild",
+  "venue": "Scientific Data",
+  "year": 2023,
+  "type": "journal-article",
+  "pages": null,
+  "volume": "10",
+  "issue": "1",
+  "authors": [
+   "Fan Yang",
+   "Lei Hu",
+   "Xinwu Liu",
+   "Shuangping Huang",
+   "Zhenghui Gu"
+  ],
+  "score": 1.0
+ },
+ "smock2022pubtables": {
+  "doi": "10.1109/cvpr52688.2022.00459",
+  "title": "PubTables-1M: Towards comprehensive table extraction from unstructured documents",
+  "venue": "2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+  "year": 2022,
+  "type": "proceedings-article",
+  "pages": "4624-4632",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Brandon Smock",
+   "Rohith Pesala",
+   "Robin Abraham"
+  ],
+  "score": 1.0
+ },
+ "smock2023aligning": {
+  "doi": "10.1007/978-3-031-41734-4_23",
+  "title": "Aligning Benchmark Datasets for Table Structure Recognition",
+  "venue": "Lecture Notes in Computer Science",
+  "year": 2023,
+  "type": "book-chapter",
+  "pages": "371-386",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Brandon Smock",
+   "Rohith Pesala",
+   "Robin Abraham"
+  ],
+  "score": 1.0
+ },
+ "nassar2022tableformer": {
+  "doi": "10.1109/cvpr52688.2022.00457",
+  "title": "TableFormer: Table Structure Understanding with Transformers",
+  "venue": "2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+  "year": 2022,
+  "type": "proceedings-article",
+  "pages": "4604-4613",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Ahmed Nassar",
+   "Nikolaos Livathinos",
+   "Maksym Lysak",
+   "Peter Staar"
+  ],
+  "score": 1.0
+ },
+ "long2021wtw": {
+  "doi": "10.1109/iccv48922.2021.00098",
+  "title": "Parsing Table Structures in the Wild",
+  "venue": "2021 IEEE/CVF International Conference on Computer Vision (ICCV)",
+  "year": 2021,
+  "type": "proceedings-article",
+  "pages": "924-932",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Rujiao Long",
+   "Wen Wang",
+   "Nan Xue",
+   "Feiyu Gao",
+   "Zhibo Yang",
+   "Yongpan Wang",
+   "Gui-Song Xia"
+  ],
+  "score": 1.0
+ },
+ "xu2020layoutlm": {
+  "doi": "10.1145/3394486.3403172",
+  "title": "LayoutLM: Pre-training of Text and Layout for Document Image Understanding",
+  "venue": "Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery &amp; Data Mining",
+  "year": 2020,
+  "type": "proceedings-article",
+  "pages": "1192-1200",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Yiheng Xu",
+   "Minghao Li",
+   "Lei Cui",
+   "Shaohan Huang",
+   "Furu Wei",
+   "Ming Zhou"
+  ],
+  "score": 1.0
+ },
+ "liu2023deplot": {
+  "doi": "10.18653/v1/2023.findings-acl.660",
+  "title": "DePlot: One-shot visual language reasoning by plot-to-table translation",
+  "venue": "Findings of the Association for Computational Linguistics: ACL 2023",
+  "year": 2023,
+  "type": "proceedings-article",
+  "pages": "10381-10399",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Fangyu Liu",
+   "Julian Eisenschlos",
+   "Francesco Piccinno",
+   "Syrine Krichene",
+   "Chenxi Pang",
+   "Kenton Lee",
+   "Mandar Joshi",
+   "Wenhu Chen",
+   "Nigel Collier",
+   "Yasemin Altun"
+  ],
+  "score": 1.0
+ },
+ "liu2023matcha": {
+  "doi": "10.18653/v1/2023.acl-long.714",
+  "title": "MatCha: Enhancing Visual Language Pretraining with Math Reasoning and Chart Derendering",
+  "venue": "Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+  "year": 2023,
+  "type": "proceedings-article",
+  "pages": "12756-12770",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Fangyu Liu",
+   "Francesco Piccinno",
+   "Syrine Krichene",
+   "Chenxi Pang",
+   "Kenton Lee",
+   "Mandar Joshi",
+   "Yasemin Altun",
+   "Nigel Collier",
+   "Julian Eisenschlos"
+  ],
+  "score": 1.0
+ },
+ "masry2023unichart": {
+  "doi": "10.18653/v1/2023.emnlp-main.906",
+  "title": "UniChart: A Universal Vision-language Pretrained Model for Chart Comprehension and Reasoning",
+  "venue": "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing",
+  "year": 2023,
+  "type": "proceedings-article",
+  "pages": "14662-14684",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Ahmed Masry",
+   "Parsa Kavehzadeh",
+   "Do Long",
+   "Enamul Hoque",
+   "Shafiq Joty"
+  ],
+  "score": 1.0
+ },
+ "masry2022chartqa": {
+  "doi": "10.18653/v1/2022.findings-acl.177",
+  "title": "ChartQA: A Benchmark for Question Answering about Charts with Visual and Logical Reasoning",
+  "venue": "Findings of the Association for Computational Linguistics: ACL 2022",
+  "year": 2022,
+  "type": "proceedings-article",
+  "pages": "2263-2279",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Ahmed Masry",
+   "Do Long",
+   "Jia Qing Tan",
+   "Shafiq Joty",
+   "Enamul Hoque"
+  ],
+  "score": 1.0
+ },
+ "methani2020plotqa": {
+  "doi": "10.1109/wacv45572.2020.9093523",
+  "title": "PlotQA: Reasoning over Scientific Plots",
+  "venue": "2020 IEEE Winter Conference on Applications of Computer Vision (WACV)",
+  "year": 2020,
+  "type": "proceedings-article",
+  "pages": "1516-1525",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Nitesh Methani",
+   "Pritha Ganguly",
+   "Mitesh M. Khapra",
+   "Pratyush Kumar"
+  ],
+  "score": 1.0
+ },
+ "mathew2021docvqa": {
+  "doi": "10.1109/wacv48630.2021.00225",
+  "title": "DocVQA: A Dataset for VQA on Document Images",
+  "venue": "2021 IEEE Winter Conference on Applications of Computer Vision (WACV)",
+  "year": 2021,
+  "type": "proceedings-article",
+  "pages": "2199-2208",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Minesh Mathew",
+   "Dimosthenis Karatzas",
+   "C. V. Jawahar"
+  ],
+  "score": 1.0
+ },
+ "gupta2016synthtext": {
+  "doi": "10.1109/cvpr.2016.254",
+  "title": "Synthetic Data for Text Localisation in Natural Images",
+  "venue": "2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)",
+  "year": 2016,
+  "type": "proceedings-article",
+  "pages": "2315-2324",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Ankush Gupta",
+   "Andrea Vedaldi",
+   "Andrew Zisserman"
+  ],
+  "score": 1.0
+ },
+ "gobel2013icdar": {
+  "doi": "10.1109/icdar.2013.292",
+  "title": "ICDAR 2013 Table Competition",
+  "venue": "2013 12th International Conference on Document Analysis and Recognition",
+  "year": 2013,
+  "type": "proceedings-article",
+  "pages": "1449-1453",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Max Gobel",
+   "Tamir Hassan",
+   "Ermelinda Oro",
+   "Giorgio Orsi"
+  ],
+  "score": 1.0
+ },
+ "zhong2019publaynet": {
+  "doi": "10.1109/icdar.2019.00166",
+  "title": "PubLayNet: Largest Dataset Ever for Document Layout Analysis",
+  "venue": "2019 International Conference on Document Analysis and Recognition (ICDAR)",
+  "year": 2019,
+  "type": "proceedings-article",
+  "pages": "1015-1022",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Xu Zhong",
+   "Jianbin Tang",
+   "Antonio Jimeno Yepes"
+  ],
+  "score": 1.0
+ },
+ "paliwal2019tablenet": {
+  "doi": "10.1109/icdar.2019.00029",
+  "title": "TableNet: Deep Learning Model for End-to-end Table Detection and Tabular Data Extraction from Scanned Document Images",
+  "venue": "2019 International Conference on Document Analysis and Recognition (ICDAR)",
+  "year": 2019,
+  "type": "proceedings-article",
+  "pages": "128-133",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Shubham Singh Paliwal",
+   "Vishwanath D",
+   "Rohit Rahul",
+   "Monika Sharma",
+   "Lovekesh Vig"
+  ],
+  "score": 1.0
+ },
+ "huang2022layoutlmv3": {
+  "doi": "10.1145/3503161.3548112",
+  "title": "LayoutLMv3: Pre-training for Document AI with Unified Text and Image Masking",
+  "venue": "Proceedings of the 30th ACM International Conference on Multimedia",
+  "year": 2022,
+  "type": "proceedings-article",
+  "pages": "4083-4091",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Yupan Huang",
+   "Tengchao Lv",
+   "Lei Cui",
+   "Yutong Lu",
+   "Furu Wei"
+  ],
+  "score": 1.0
+ },
+ "wang2020ratsql": {
+  "doi": "10.18653/v1/2020.acl-main.677",
+  "title": "RAT-SQL: Relation-Aware Schema Encoding and Linking for Text-to-SQL Parsers",
+  "venue": "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics",
+  "year": 2020,
+  "type": "proceedings-article",
+  "pages": "7567-7578",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Bailin Wang",
+   "Richard Shin",
+   "Xiaodong Liu",
+   "Oleksandr Polozov",
+   "Matthew Richardson"
+  ],
+  "score": 1.0
+ },
+ "scholak2021picard": {
+  "doi": "10.18653/v1/2021.emnlp-main.779",
+  "title": "PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models",
+  "venue": "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing",
+  "year": 2021,
+  "type": "proceedings-article",
+  "pages": "9895-9901",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Torsten Scholak",
+   "Nathan Schucher",
+   "Dzmitry Bahdanau"
+  ],
+  "score": 1.0
+ },
+ "pourreza2023dinsql": {
+  "doi": "10.52202/075280-1577",
+  "title": "DIN-SQL: Decomposed In-Context Learning of Text-to-SQL with Self-Correction",
+  "venue": "Advances in Neural Information Processing Systems 36",
+  "year": 2023,
+  "type": "proceedings-article",
+  "pages": "36339-36348",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Mohammadreza Pourreza",
+   "Davood Rafiei"
+  ],
+  "score": 1.0
+ },
+ "dettmers2023qlora": {
+  "doi": "10.52202/075280-0441",
+  "title": "QLoRA: Efficient Finetuning of Quantized LLMs",
+  "venue": "Advances in Neural Information Processing Systems 36",
+  "year": 2023,
+  "type": "proceedings-article",
+  "pages": "10088-10115",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Tim Dettmers",
+   "Artidoro Pagnoni",
+   "Ari Holtzman",
+   "Luke Zettlemoyer"
+  ],
+  "score": 1.0
+ },
+ "kuhn1955hungarian": {
+  "doi": "10.1002/nav.3800020109",
+  "title": "The Hungarian method for the assignment problem",
+  "venue": "Naval Research Logistics Quarterly",
+  "year": 1955,
+  "volume": "2",
+  "issue": "1-2",
+  "pages": "83-97",
+  "authors": [
+   "Harold W. Kuhn"
+  ],
+  "type": "journal-article"
+ },
+ "prasad2020cascadetabnet": {
+  "doi": "10.1109/cvprw50498.2020.00294",
+  "title": "CascadeTabNet: An approach for end to end table detection and structure recognition from image-based documents",
+  "venue": "2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)",
+  "year": 2020,
+  "type": "proceedings-article",
+  "pages": "2439-2447",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Devashish Prasad",
+   "Ayan Gadpal",
+   "Kshitij Kapadni",
+   "Manish Visave",
+   "Kavita Sultanpure"
+  ],
+  "score": 1.0
+ },
+ "schreiber2017deepdesrt": {
+  "doi": "10.1109/icdar.2017.192",
+  "title": "DeepDeSRT: Deep Learning for Detection and Structure Recognition of Tables in Document Images",
+  "venue": "2017 14th IAPR International Conference on Document Analysis and Recognition (ICDAR)",
+  "year": 2017,
+  "type": "proceedings-article",
+  "pages": "1162-1167",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Sebastian Schreiber",
+   "Stefan Agne",
+   "Ivo Wolf",
+   "Andreas Dengel",
+   "Sheraz Ahmed"
+  ],
+  "score": 1.0
+ },
+ "kim2022donut": {
+  "doi": "10.1007/978-3-031-19815-1_29",
+  "title": "OCR-Free Document Understanding Transformer",
+  "venue": "Lecture Notes in Computer Science",
+  "year": 2022,
+  "type": "book-chapter",
+  "pages": "498-517",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Geewook Kim",
+   "Teakgyu Hong",
+   "Moonbin Yim",
+   "JeongYeon Nam",
+   "Jinyoung Park",
+   "Jinyeong Yim",
+   "Wonseok Hwang",
+   "Sangdoo Yun",
+   "Dongyoon Han",
+   "Seunghyun Park"
+  ],
+  "score": 1.0
+ },
+ "zheng2024multimodal": {
+  "doi": "10.18653/v1/2024.acl-long.493",
+  "title": "Multimodal Table Understanding",
+  "venue": "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+  "year": 2024,
+  "type": "proceedings-article",
+  "pages": "9102-9124",
+  "volume": null,
+  "issue": null,
+  "authors": [
+   "Mingyu Zheng",
+   "Xinwei Feng",
+   "Qingyi Si",
+   "Qiaoqiao She",
+   "Zheng Lin",
+   "Wenbin Jiang",
+   "Weiping Wang"
+  ],
+  "score": 1.0
+ }
+}
