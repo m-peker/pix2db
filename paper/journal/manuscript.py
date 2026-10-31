@@ -2,7 +2,7 @@
 
 TITLE = ("PIX2DB: Reconstructing Executable Relational Databases from Document Images with a 2B "
          "Vision-Language Model")
-AFFILIATION = ("Ozveri R&amp;D Center, Ozdilek Home Textile Industry and Trade Inc., [postal address], Bursa, "
+AFFILIATION = ("Ozveri R&amp;D Center, Ozdilek Home Textile Industry and Trade Inc., Osmangazi, Bursa 16150, "
                "Türkiye; e-mail: musa.peker@ozdilek.com.tr")
 CORRESPONDING = "Corresponding Author: Musa Peker (musa.peker@ozdilek.com.tr)"
 ORCID = "0000-0002-6495-9187"
