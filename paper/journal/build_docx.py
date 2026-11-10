@@ -19,12 +19,23 @@ from refs_ieee import REFS
 HERE = Path(__file__).parent
 PAPER = HERE.parent
 TEMPLATE = PAPER / "new_journal" / "FAITH_Template_2026.docx"
-OUT = HERE / "pix2db_FAITH.docx"
+import os
+HIGHLIGHT = os.environ.get("FAITH_HIGHLIGHT", "0") == "1"  # yellow highlight on <hl>...</hl> (revised manuscript)
+OUT = HERE / os.environ.get("FAITH_OUT", "pix2db_FAITH.docx")
 WORK = HERE / "_build"
 
 N = dict(re.findall(r"\\newcommand\{\\N(\w+)\}\{([^}]*)\}", (PAPER / "numbers.tex").read_text(encoding="utf-8")))
 N = {k: v.replace("{,}", ",") for k, v in N.items()}
 PREPRINT = "https://doi.org/10.21203/rs.3.rs-11467404/v1"
+import json
+REV = PAPER / "tables_rev"
+R = json.loads((REV / "numbers.json").read_text(encoding="utf-8"))  # revision numbers (make_rev_tables.py)
+
+
+def RT(name):
+    """Header and rows of a revision table (make_rev_tables.py)."""
+    t = json.loads((REV / f"{name}.json").read_text(encoding="utf-8"))
+    return t["header"], t["rows"]
 
 # ------------------------------------------------------------------ citation numbering (order of first use)
 CITE_ORDER: list[str] = []
@@ -51,13 +62,13 @@ def cite(keys: str) -> str:
 
 # ------------------------------------------------------------------ inline markup -> runs
 def runs(text: str, base_rpr: str = "") -> str:
-    """Supports <i>, <b>, <code>, <sup>, <sub> and [[cite keys]]."""
+    """Supports <i>, <b>, <code>, <sup>, <sub>, <hl> (revision highlight) and [[cite keys]]."""
     text = re.sub(r"\[\[([^\]]+)\]\]", lambda m: cite(m.group(1)), text)
     out, stack = [], []
-    for tok in re.split(r"(</?(?:i|b|code|sup|sub)>)", text):
+    for tok in re.split(r"(</?(?:i|b|code|sup|sub|hl)>)", text):
         if not tok:
             continue
-        m = re.fullmatch(r"<(/?)(i|b|code|sup|sub)>", tok)
+        m = re.fullmatch(r"<(/?)(i|b|code|sup|sub|hl)>", tok)
         if m:
             if m.group(1):
                 stack.remove(m.group(2))
@@ -75,6 +86,8 @@ def runs(text: str, base_rpr: str = "") -> str:
             rpr += '<w:vertAlign w:val="superscript"/>'
         if "sub" in stack:
             rpr += '<w:vertAlign w:val="subscript"/>'
+        if "hl" in stack and HIGHLIGHT:
+            rpr += '<w:highlight w:val="yellow"/>'
         t = html.escape(html.unescape(tok), quote=False)
         out.append(f'<w:r>{"<w:rPr>" + rpr + "</w:rPr>" if rpr else ""}<w:t xml:space="preserve">{t}</w:t></w:r>')
     return "".join(out)
@@ -106,7 +119,9 @@ EQNO = [0]
 BODY_EMU = 7857 * 635  # text block width in the template (EMU)
 
 
-def figure(path: Path, caption: str, width_frac: float = 1.0) -> str:
+def figure(path: Path, caption: str, width_frac: float = 1.0, hl: bool = False) -> str:
+    if hl:
+        caption = f"<hl>{caption}</hl>"
     FIGNO[0] += 1
     rid = f"rIdP2D{len(MEDIA) + 1}"
     MEDIA.append((rid, path))
@@ -131,7 +146,14 @@ def figure(path: Path, caption: str, width_frac: float = 1.0) -> str:
 # ------------------------------------------------------------------ tables
 def table(header: list[str], rows: list[list[str]], widths: list[int], caption: str, footer: str | None = None,
           label: str | None = None, align_first_left: bool = True, size: int = 18, bold_rows=(),
-          left_cols=(0,), head_size: int | None = None) -> str:
+          left_cols=(0,), head_size: int | None = None, hl: bool = False) -> str:
+    """hl=True marks every cell as revised (yellow in the highlighted manuscript)."""
+    if hl:
+        mark = lambda c: "\n".join(f"<hl>{x}</hl>" for x in c.split("\n"))
+        header = [mark(h) for h in header]
+        rows = [[mark(c) for c in r] for r in rows]
+        caption = f"<hl>{caption}</hl>"
+        footer = f"<hl>{footer}</hl>" if footer else footer
     if label is None:
         TABNO[0] += 1
         label = f"Table {TABNO[0]}"

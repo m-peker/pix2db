@@ -4,7 +4,7 @@ from __future__ import annotations
 import io
 import re
 import sqlite3
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 ALLOWED = re.compile(r"^\s*(CREATE\s+TABLE|INSERT\s+INTO)\b", re.I)
 FENCE = re.compile(r"```(?:sql|sqlite|html)?\s*(.*?)```", re.S | re.I)
@@ -100,6 +100,7 @@ class DBTable:
     decl_types: list[str]
     rows: list[tuple]
     fks: list[tuple[str, str, str]]  # (from_col, parent_table, parent_col)
+    pks: list[str] = field(default_factory=list)
 
 
 def read_db(con: sqlite3.Connection) -> list[DBTable]:
@@ -112,5 +113,6 @@ def read_db(con: sqlite3.Connection) -> list[DBTable]:
         types = [(i[2] or "").upper() for i in info]
         rows = con.execute(f'SELECT * FROM "{t}"').fetchall()
         fks = [(f[3], f[2], f[4]) for f in con.execute(f'PRAGMA foreign_key_list("{t}")').fetchall()]
-        out.append(DBTable(t, cols, types, rows, fks))
+        pks = [i[1] for i in info if i[5]]
+        out.append(DBTable(t, cols, types, rows, fks, pks))
     return out

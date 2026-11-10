@@ -1,0 +1,52 @@
+{
+ "header": [
+  "System",
+  "Type accuracy",
+  "SQL executes (raw)",
+  "Output tokens"
+ ],
+ "rows": [
+  [
+   "PIX2DB-2b (ours)",
+   "0.99",
+   "0.96",
+   "195"
+  ],
+  [
+   "2B fine-tuned → HTML → SQLite",
+   "0.99",
+   "–",
+   "304"
+  ],
+  [
+   "Qwen3-VL-8B → SQL",
+   "0.98",
+   "0.95",
+   "265"
+  ],
+  [
+   "Qwen3-VL-8B → HTML → SQLite",
+   "0.89",
+   "–",
+   "405"
+  ],
+  [
+   "Qwen3-VL-4B → SQL",
+   "0.98",
+   "0.99",
+   "207"
+  ],
+  [
+   "Qwen3-VL-2B → SQL (base)",
+   "0.98",
+   "0.83",
+   "274"
+  ],
+  [
+   "Docling (TableFormer + OCR)",
+   "0.77",
+   "–",
+   "–"
+  ]
+ ]
+}

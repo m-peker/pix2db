@@ -132,7 +132,11 @@ def score(scene: Scene, pred: list[DBTable], num_tol_abs: float = 0.0) -> dict:
            "pred_cells": pred_cells}
     if not pred or gold_cells == 0:
         res.update(matched=0, precision=0.0, recall=0.0, f1=0.0, table_exact=0.0, type_acc=None,
-                   rowcount_ok=0.0, fk_recall=None if not scene.foreign_keys else 0.0)
+                   rowcount_ok=0.0, fk_recall=None if not scene.foreign_keys else 0.0,
+                   fk_col_recall=None if not scene.foreign_keys else 0.0, n_pred_fk=0, n_pred_fk_ok=0,
+                   ref_integrity=None, table_count_ok=0.0, col_count_ok=0.0,
+                   pk_recall=None if not any(t.primary_key for t in scene.tables) else 0.0, n_pred_pk=0,
+                   n_pred_pk_ok=0)
         return res
 
     pairs = {}
@@ -183,6 +187,51 @@ def score(scene: Scene, pred: list[DBTable], num_tol_abs: float = 0.0) -> dict:
                     hits += 1
         fk_recall = hits / len(scene.foreign_keys)
 
+    # --- schema-level checks (revision): FK precision, referential integrity, table/column counts, PKs
+    colmaps = {gi: dict(pairs[gi, pi][1]) for gi, pi in tmatch.items()}  # gold col -> pred col
+    inv_t = {pi: gi for gi, pi in tmatch.items()}
+    gold_fk = {(fk.child_table, fk.parent_table): fk for fk in scene.foreign_keys}
+    gname = {k: t.name for k, t in enumerate(scene.tables)}
+    n_pred_fk = n_pred_fk_ok = col_hits = 0
+    ri_num = ri_den = 0
+    pred_by_name = {t.name.lower(): t for t in pred}
+    for pi, pt in enumerate(pred):
+        for frm, ptab, pcol in pt.fks:
+            n_pred_fk += 1
+            parent = pred_by_name.get(ptab.lower())
+            ppi = pred.index(parent) if parent is not None else None
+            if parent is not None and frm in pt.columns and (pcol or "") in parent.columns:
+                cv = {norm(r[pt.columns.index(frm)]) for r in pt.rows} - {None}
+                pv = {norm(r[parent.columns.index(pcol)]) for r in parent.rows}
+                ri_num += len(cv & pv)
+                ri_den += len(cv)
+            if pi in inv_t and ppi in inv_t:
+                fk = gold_fk.get((gname[inv_t[pi]], gname[inv_t[ppi]]))
+                if fk:
+                    n_pred_fk_ok += 1
+                    gci = [c.name for c in scene.tables[inv_t[pi]].columns].index(fk.child_column)
+                    if frm in pt.columns and colmaps[inv_t[pi]].get(gci) == pt.columns.index(frm):
+                        col_hits += 1
+    pk_gold = [gi for gi, t in enumerate(scene.tables) if t.primary_key]
+    pk_hits = 0
+    for gi in pk_gold:
+        if gi in tmatch:
+            pt = pred[tmatch[gi]]
+            gci = [c.name for c in scene.tables[gi].columns].index(scene.tables[gi].primary_key)
+            j = colmaps[gi].get(gci)
+            pk_hits += int(j is not None and pt.columns[j] in pt.pks)
+    n_pred_pk = sum(bool(t.pks) for t in pred)
+    n_pred_pk_ok = pk_hits  # predicted PKs on the aligned gold key column
+    col_ok = sum(1 for gi, pi in tmatch.items() if len(pred[pi].columns) == len(scene.tables[gi].columns))
+    res.update(fk_col_recall=(col_hits / len(scene.foreign_keys)) if scene.foreign_keys else None,
+               n_pred_fk=n_pred_fk, n_pred_fk_ok=n_pred_fk_ok,
+               ref_integrity=(ri_num / ri_den) if ri_den else None,
+               table_count_ok=float(len(pred) == len(gold)), col_count_ok=col_ok / len(gold),
+               pk_recall=(pk_hits / len(pk_gold)) if pk_gold else None, n_pred_pk=n_pred_pk,
+               n_pred_pk_ok=n_pred_pk_ok)
+    res["_align"] = {scene.tables[gi].name: (pred[pi].name, {scene.tables[gi].columns[i].name: pred[pi].columns[j]
+                                                           for i, j in pairs[gi, pi][1]})
+                     for gi, pi in tmatch.items()}
     res.update(matched=matched, precision=prec, recall=rec, f1=f1,
                table_exact=exact / len(gold), rowcount_ok=rowcount_ok / len(gold),
                type_acc=(type_hits / type_n) if type_n else None, fk_recall=fk_recall)

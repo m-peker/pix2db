@@ -47,4 +47,11 @@ REFS = {
     "dettmers2023qlora": 'T. Dettmers, A. Pagnoni, A. Holtzman, and L. Zettlemoyer, "QLoRA: Efficient finetuning of quantized LLMs," in <i>Advances in Neural Information Processing Systems 36 (NeurIPS)</i>, 2023, pp. 10088–10115, doi: 10.52202/075280-0441.',
     "kwon2023vllm": 'W. Kwon <i>et al.</i>, "Efficient memory management for large language model serving with PagedAttention," in <i>Proc. 29th Symp. Operating Systems Principles (SOSP)</i>, 2023, pp. 611–626, doi: 10.1145/3600006.3613165.',
     "kuhn1955hungarian": 'H. W. Kuhn, "The Hungarian method for the assignment problem," <i>Naval Research Logistics Quarterly</i>, vol. 2, no. 1–2, pp. 83–97, 1955, doi: 10.1002/nav.3800020109.',
+    "hendrycks2019robustness": 'D. Hendrycks and T. Dietterich, "Benchmarking neural network robustness to common corruptions and perturbations," in <i>Proc. Int. Conf. Learning Representations (ICLR)</i>, 2019.',
+    "biderman2024lora": 'D. Biderman <i>et al.</i>, "LoRA learns less and forgets less," <i>Transactions on Machine Learning Research</i>, 2024.',
+    "liu2023llava": 'H. Liu, C. Li, Q. Wu, and Y. J. Lee, "Visual instruction tuning," in <i>Advances in Neural Information Processing Systems (NeurIPS)</i>, vol. 36, 2023, pp. 34892–34916.',
+    "katanaml2023invoices": 'Katana ML, "invoices-donut-data-v1," Hugging Face dataset. [Online]. Available: https://huggingface.co/datasets/katanaml-org/invoices-donut-data-v1 (accessed Nov. 9, 2026).',
+    "aduvuku2026ondevice": 'V. Aduvuku, G. Andogah, and T. Habibu, "Bridging the deployment gap: A decision oriented survey of efficient on-device foundation models for vision," <i>J. Future Artif. Intell. Technol.</i>, vol. 3, no. 1, pp. 99–131, 2026, doi: 10.62411/faith.3048-3719-354.',
+    "ramadani2025lumen": 'R. Ramadani, D. R. I. M. Setiadi, I. Harkespan, K. D. Hartomo, and C. Arthur, "LUMEN: Low-light unified multi-stage enhancement network to improve RetinaFace-based face detection," <i>J. Future Artif. Intell. Technol.</i>, vol. 2, no. 4, pp. 565–586, 2025, doi: 10.62411/faith.3048-3719-123.',
+    "rahman2025gans": 'M. A. Rahman, G. A. Francia, and H. Shahriar, "Leveraging GANs for synthetic data generation to improve intrusion detection systems," <i>J. Future Artif. Intell. Technol.</i>, vol. 1, no. 4, pp. 429–439, 2025, doi: 10.62411/faith.3048-3719-52.',
 }

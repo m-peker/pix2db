@@ -1,0 +1,26 @@
+# revision: v2 mixture, seed 2
+model: Qwen/Qwen3-VL-2B-Instruct
+max_pixels: 1310720
+max_len: 4096
+output_dir: /workspace/ckpt/rev_seed2
+seed: 2
+
+train_sources:
+  - {dir: data/train, n: 14000}
+  - {dir: data/receipt_train}
+  - {dir: data/real_train, kinds: [pubtabnet]}
+  - {dir: data/real_train, kinds: [fintabnet]}
+  - {dir: data/real_train, kinds: [cord], repeat: 2}
+
+lora_r: 64
+lora_alpha: 128
+lora_dropout: 0.05
+target_modules: '.*language_model.*\.(q_proj|k_proj|v_proj|o_proj|gate_proj|up_proj|down_proj)'
+
+batch_size: 4
+grad_accum: 4
+lr: 1.0e-4
+warmup_ratio: 0.03
+epochs: 1
+save_steps: 300
+gradient_checkpointing: true

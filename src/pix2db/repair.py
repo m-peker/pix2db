@@ -202,7 +202,7 @@ def _fix_field(f: str) -> str:
     return "'" + f.replace("'", "''") + "'"
 
 
-def row_fallback(con: sqlite3.Connection, stmt: str) -> tuple[str | None, int, int]:
+def row_fallback(con: sqlite3.Connection, stmt: str, allow_drop_pk: bool = True) -> tuple[str | None, int, int]:
     """Insert a failing multi-row INSERT row by row, quoting bare text values ('9 (8)', '85.0 ± 10.8').
     Returns (statement of the rows that went in, n_ok, n_dropped)."""
     m = re.match(r"(?is)\s*(INSERT\s+INTO\s+.+?\([^)]*\))\s*VALUES\s*(.*?);?\s*$", stmt)
@@ -224,7 +224,7 @@ def row_fallback(con: sqlite3.Connection, stmt: str) -> tuple[str | None, int, i
             continue
         row = "(" + ", ".join(fields) + ")"
         err = _try(con, f"{head} VALUES {row};")
-        if err and "UNIQUE constraint failed" in err:
+        if err and allow_drop_pk and "UNIQUE constraint failed" in err:
             tbl = err.split("failed:")[1].strip().split(".")[0]
             try:
                 if drop_primary_key(con, tbl):
@@ -269,7 +269,12 @@ def _try(con, stmt) -> str | None:
         return f"{type(e).__name__}: {e}"
 
 
-def repair(text: str) -> Report:
+STRATEGIES = ("salvage", "apostrophes", "identifiers", "drop_pk", "row_fallback")
+
+
+def repair(text: str, enabled=STRATEGIES) -> Report:
+    """`enabled` selects repair strategies (for ablations); checks always run."""
+    en = set(enabled)
     con = sqlite3.connect(":memory:")
     rep = Report("", con)
     raw = [s for s in split_statements(strip_fences(text)) if s]
@@ -279,7 +284,7 @@ def repair(text: str) -> Report:
             continue
         is_last = k == len(raw) - 1
         if not sqlite3.complete_statement(stmt):
-            if is_last and re.match(r"(?i)\s*INSERT", stmt):
+            if is_last and "salvage" in en and re.match(r"(?i)\s*INSERT", stmt):
                 s2 = salvage_insert(stmt)
                 if s2:
                     rep.repairs.append("salvaged complete rows of a truncated INSERT")
@@ -288,17 +293,21 @@ def repair(text: str) -> Report:
                 stmt = stmt.rstrip() + ";"
         err = _try(con, stmt)
         if err:
-            for name, fn in (("escaped apostrophes", fix_apostrophes), ("quoted identifiers", fix_identifiers),
+            cands = (("escaped apostrophes", fix_apostrophes), ("quoted identifiers", fix_identifiers),
                              ("escaped apostrophes + quoted identifiers", lambda s: fix_identifiers(fix_apostrophes(s))),
                              ("sanitized identifiers", sanitize_identifiers),
                              ("escaped apostrophes + sanitized identifiers",
-                              lambda s: sanitize_identifiers(fix_apostrophes(s)))):
+                              lambda s: sanitize_identifiers(fix_apostrophes(s))))
+            for name, fn in cands:
+                need = ({"apostrophes"} if "apostrophes" in name else set()) | ({"identifiers"} if "identifiers" in name else set())
+                if not need <= en:
+                    continue
                 s2 = fn(stmt)
                 if s2 != stmt and _try(con, s2) is None:
                     rep.repairs.append(name)
                     stmt, err = s2, None
                     break
-        if err and "UNIQUE constraint failed" in err:
+        if err and "drop_pk" in en and "UNIQUE constraint failed" in err:
             tbl = err.split("failed:")[1].strip().split(".")[0]
             try:
                 dropped = drop_primary_key(con, tbl)
@@ -309,8 +318,8 @@ def repair(text: str) -> Report:
                 final = [re.sub(r"(?i)\s+PRIMARY\s+KEY", "", s) if re.match(rf'(?is)\s*CREATE\s+TABLE\s+"?{re.escape(tbl)}"?\s*\(', s) else s
                          for s in final]
                 err = None
-        if err and re.match(r"(?i)\s*INSERT", stmt):
-            s2, n_ok, n_drop = row_fallback(con, fix_apostrophes(stmt))
+        if err and "row_fallback" in en and re.match(r"(?i)\s*INSERT", stmt):
+            s2, n_ok, n_drop = row_fallback(con, fix_apostrophes(stmt), allow_drop_pk="drop_pk" in en)
             if s2:
                 rep.repairs.append(f"row-by-row insert with quoted text values ({n_ok} ok, {n_drop} dropped)")
                 if n_drop:

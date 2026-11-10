@@ -18,12 +18,27 @@ from transformers import AutoModelForImageTextToText, AutoProcessor, Trainer, Tr
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from pix2db.data import load_meta  # noqa: E402
-from pix2db.prompts import SQL_PROMPT  # noqa: E402
+from pix2db.prompts import HTML_PROMPT, SQL_PROMPT  # noqa: E402
 from pix2db.scene import Scene  # noqa: E402
 
 
-def target_text(item: dict) -> str:
-    return "```sql\n" + Scene.from_dict(item["scene"]).to_sql() + "\n```"
+def scene_html(scene: Scene) -> str:
+    """Gold tables as plain HTML (header row = column names, one row per record, no types or keys)."""
+    import html
+    out = []
+    for t in scene.tables:
+        head = "".join(f"<th>{html.escape(c.name)}</th>" for c in t.columns)
+        body = "".join("<tr>" + "".join(f"<td>{'' if v is None else html.escape(str(v))}</td>" for v in r)
+                       + "</tr>" for r in t.rows)
+        out.append(f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>")
+    return "\n".join(out)
+
+
+def target_text(item: dict, fmt: str = "sql") -> str:
+    scene = Scene.from_dict(item["scene"])
+    if fmt == "html":
+        return "```html\n" + scene_html(scene) + "\n```"
+    return "```sql\n" + scene.to_sql() + "\n```"
 
 
 class SqlDataset(Dataset):
@@ -33,7 +48,8 @@ class SqlDataset(Dataset):
     or a single directory string (v1 configs).
     """
 
-    def __init__(self, sources, limit: int | None = None, seed: int = 42):
+    def __init__(self, sources, limit: int | None = None, seed: int = 42, fmt: str = "sql"):
+        self.fmt = fmt
         if isinstance(sources, str):
             sources = [{"dir": sources}]
         rng = random.Random(seed)
@@ -59,12 +75,13 @@ class SqlDataset(Dataset):
     def __getitem__(self, i):
         it = self.items[i]
         img = Image.open(Path(it["_dir"]) / "images" / f"{it['id']}.png").convert("RGB")
-        return {"image": img, "target": target_text(it)}
+        return {"image": img, "target": target_text(it, self.fmt)}
 
 
 class Collator:
-    def __init__(self, processor, max_len: int):
+    def __init__(self, processor, max_len: int, prompt: str = SQL_PROMPT):
         self.p = processor
+        self.prompt = prompt
         self.max_len = max_len
         tok = processor.tokenizer
         self.assistant_ids = tok.encode("<|im_start|>assistant\n", add_special_tokens=False)
@@ -72,7 +89,7 @@ class Collator:
 
     def __call__(self, batch):
         msgs = [[{"role": "user", "content": [{"type": "image", "image": b["image"]},
-                                              {"type": "text", "text": SQL_PROMPT}]},
+                                              {"type": "text", "text": self.prompt}]},
                  {"role": "assistant", "content": [{"type": "text", "text": b["target"]}]}] for b in batch]
         enc = self.p.apply_chat_template(msgs, tokenize=True, return_dict=True, return_tensors="pt",
                                          padding=True, add_generation_prompt=False)
@@ -121,7 +138,9 @@ def main():
         model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
         model.enable_input_require_grads()
 
-    train = SqlDataset(cfg.get("train_sources") or cfg["train_dir"], limit=args.limit)
+    fmt = cfg.get("target", "sql")
+    train = SqlDataset(cfg.get("train_sources") or cfg["train_dir"], limit=args.limit,
+                       seed=cfg.get("seed", 42), fmt=fmt)
     print(f"train items: {len(train)}")
     targs = TrainingArguments(
         output_dir=cfg["output_dir"],
@@ -142,7 +161,8 @@ def main():
         seed=cfg.get("seed", 42),
     )
     trainer = Trainer(model=model, args=targs, train_dataset=train,
-                      data_collator=Collator(processor, cfg.get("max_len", 4096)))
+                      data_collator=Collator(processor, cfg.get("max_len", 4096),
+                                             HTML_PROMPT if fmt == "html" else SQL_PROMPT))
     ckpts = sorted(Path(cfg["output_dir"]).glob("checkpoint-*"))
     trainer.train(resume_from_checkpoint=bool(ckpts) and not args.max_steps)
     final = Path(cfg["output_dir"]) / "final"

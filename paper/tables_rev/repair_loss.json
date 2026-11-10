@@ -1,0 +1,44 @@
+{
+ "header": [
+  "Model",
+  "Outputs",
+  "Repaired",
+  "Rescued (raw fails)",
+  "F1 of rescued",
+  "Precision of rescued",
+  "Rows dropped / gold rows",
+  "PKs dropped"
+ ],
+ "rows": [
+  [
+   "PIX2DB-2b",
+   "1410",
+   "29",
+   "29",
+   "0.77",
+   "0.78",
+   "7 / 10,234",
+   "18"
+  ],
+  [
+   "Qwen3-VL-8B",
+   "1410",
+   "54",
+   "54",
+   "0.82",
+   "0.82",
+   "3 / 10,234",
+   "45"
+  ],
+  [
+   "Qwen3-VL-2B",
+   "1410",
+   "135",
+   "122",
+   "0.47",
+   "0.52",
+   "32 / 10,234",
+   "39"
+  ]
+ ]
+}
