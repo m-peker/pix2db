@@ -617,26 +617,38 @@ def write(g):
        f"training data; the invoice results of Section 5.3 show how much of this transfers to an unfamiliar "
        f"document type.")
     hdr, rows = RT("data_ablation")
-    t_ab = table(hdr, rows, [2157, 640, 640, 640, 640, 640, 640, 640, 640, 640],
+    t_ab = table(hdr, rows, [1215, 745, 830, 775, 680, 745, 775, 745, 680, 735],
                  "Effect of the training data. All models use the recipe of Table 3 and differ only in the data. "
                  "Synthetic: exact match; PubTabNet, FinTabNet, TabRecSet: cell F1; CORD, receipts, invoices: "
                  "recall; charts: exact match; FK recall on the synthetic test.",
-                 size=15, head_size=14, hl=True)
-    if have_ablation:
-        PH(f"The first submission compared a model trained on 24,000 synthetic images with the mixed model "
-           f"trained on 36,589 examples, so the amount of data and its kind changed together. {t_ab} adds two "
-           f"controls trained for this revision: a synthetic-only model with 36,589 examples, the same number as "
-           f"the mixture, and a model trained only on the 19,589 converted real examples. "
-           f"With the size fixed, synthetic-only training still transfers poorly: PubTabNet F1 "
+                 size=15, head_size=13, hl=True)
+    have_synth = "synth_synth" in R
+    PH(f"The first submission compared a model trained on 24,000 synthetic images with the mixed model "
+       f"trained on 36,589 examples, so the amount of data and its kind changed together. {t_ab} adds two "
+       f"controls trained for this revision: a synthetic-only model with 36,589 examples, the same number as "
+       f"the mixture, and a model trained only on the 19,589 converted real examples.")
+    if have_synth:
+        PH(f"With the size fixed, synthetic-only training still transfers poorly: PubTabNet F1 "
            f"{r('ptn_synth')}, FinTabNet {r('ftn_synth')}, CORD recall {r('cord_synth')} and TabRecSet "
            f"{r('trs_synth')}, against {r('ptn_ours')}, {r('ftn_ours')}, {r('cord_ours')} and {r('trs_ours')} for "
-           f"the mixture. The gap is therefore caused by the kind of data, not its amount. The real-only model "
-           f"shows the converse: it reaches {r('ptn_real')} on PubTabNet and {r('ftn_real')} on FinTabNet, but "
-           f"only {r('synth_real')} exact match on the synthetic test and {r('fkr_real')} FK recall, because "
-           f"nothing in the real data contains a merged-cell group, a form or a foreign key. The two sources "
-           f"teach different things, and the mixture keeps both.")
+           f"the mixture. The real-table scores are the same as for the 24,000-image model of the first "
+           f"submission, so the additional 12,589 synthetic examples bring nothing on real tables, and the gap of "
+           f"the first submission is caused by the kind of data, not its amount. CORD is the exception "
+           f"({r('cord_synth')}), because the synthetic part includes the rendered receipts, which are close to the "
+           f"CORD layout.")
     else:
-        PH(f"[pending: synthetic-only and real-only runs] {t_ab}")
+        PH("[pending: synthetic-only run]")
+    PH(f"The real-only model is the more informative control. On the real table sets it is as good as the "
+       f"mixture: {r('ptn_real')} on PubTabNet, {r('ftn_real')} on FinTabNet and {r('trs_real')} on TabRecSet, "
+       f"against {r('ptn_ours')}, {r('ftn_ours')} and {r('trs_ours')}. The synthetic data does not make the model "
+       f"read real tables better. What it adds is everything the real annotations do not contain. The real-only "
+       f"model reaches {r('synth_real')} exact match on the synthetic test and declares no foreign key at all "
+       f"(FK recall {r('fkr_real')}), because no real example has a merged-cell group, a form or a relation. It "
+       f"also falls behind on the document types that the mixture covers only synthetically: receipts "
+       f"{r('rcpt_real')} against {r('rcpt_ours')}, invoices {r('inv_real')} against {r('inv_ours')}, and charts "
+       f"{r('chart_real')} against {r('chart_ours')}. The two sources therefore teach different things: the real "
+       f"data teaches reading, the synthetic data teaches the relational structure, and the mixture keeps both "
+       f"without a measurable cost on either side.")
     PH(f"The failures of the synthetic-only model on real tables were rarely layout errors. In 82 of 150 "
        f"PubTabNet outputs of the first synthetic model the SQL did not execute at all (28 after repair), mostly "
        f"because composite values such as <code>9 (8)</code> or <code>85.0 ± 10.8</code> were written as bare "
@@ -701,7 +713,7 @@ def write(g):
        f"over the runs. The TabRecSet result in particular is not an unlucky run ({r('seed_trs')}). The training "
        f"loss, logged every 10 steps, falls mostly in the first tenth of the epoch and changes little after "
        f"the first third; for seed 1 the mean loss is {r('loss_s1_q4')} in the fourth tenth of the epoch and "
-       f"{r('loss_s1_q10')} in the last.")
+       f"{r('loss_s1_q10')} in the last, for seed 2 {r('loss_s2_q4')} and {r('loss_s2_q10')}.")
 
     # ---- 4.8 cost
     H2("4.8. Column Types and Cost")
@@ -711,7 +723,7 @@ def write(g):
       f"{N['tokhtml']} for the 8B HTML pipeline<hl> and 304 for the task-adapted HTML model, whose expanded "
       f"tables repeat merged values</hl>), which together with its size makes it the fastest system: 0.09 s per "
       f"image amortized over a vLLM batch on one A40. <hl>Training one model takes 5.9 h on one A40; the "
-      f"revision experiments, six trainings and all evaluations, used about 60 GPU-hours.</hl>")
+      f"revision experiments, five trainings and all evaluations, used about 60 GPU-hours.</hl>")
 
     # ================================================================== 5. Comparison
     H1("<hl>5. Comparison with Existing Methods</hl>")
@@ -829,7 +841,9 @@ def write(g):
        "ability is reading: recovering the characters of an unfamiliar photograph and the marks of a chart. "
        "Here training on our data helps little. The synthetic-only model read rendered text well and real "
        "text poorly, the real data fixed the familiar sources but not TabRecSet, and on unfamiliar photographs "
-       "the larger model remains ahead (Sections 4.5 and 5.4).")
+       "the larger model remains ahead (Sections 4.5 and 5.4). The real-only control shows the same split from "
+       "the other side: it reads the real tables as well as the mixture, but it declares no key and organizes "
+       "no layout it was not shown.")
     PH("This division has practical consequences. Organizing can be taught with synthetic data whose gold is "
        "free and exact, so a new convention, such as a different date format or a new kind of relation, costs "
        "only a change to the renderer. Reading has to be learned from real images of the target kind, and its "

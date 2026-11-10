@@ -85,3 +85,17 @@ Findings:
 - Published: GitHub m-peker/pix2db (public), HF model/LoRAs/dataset public, static Space musapeker/pix2db.
 - HF Gradio Spaces now require PRO even on cpu-basic (402) → static sql.js demo instead.
 - Pod: all artefacts on HF; pod can be deleted. Remember runpodctl key must be configured on every new pod.
+
+## 2026-11-10 — FAITH revision (Revisions Required)
+
+- Revision experiments on A40 (~$27 of $30): task-adapted HTML-2B baseline, seeds 1 and 2, synthetic-only (36,589)
+  and real-only (19,589) controls, Docling, new eval sets (invoices, charts, single degradations), new schema metrics
+  (FK precision, PK precision, referential integrity, query equivalence). Details: docs/revision_results.md.
+- Key findings: HTML-2B matches SQL model on cells (no significant difference) but has no keys; seed s.d. ≤ .011;
+  real-only equals the mixture on real tables but has FK recall 0; synthetic-only at matched size equals v1 on real
+  tables → kind of data, not amount.
+- Tables: paper/make_rev_tables.py → paper/tables_rev/; scores in paper/cache/rev/runs/rev/*/scores_rev_*.csv.
+- Manuscript: paper/journal/manuscript.py (old: manuscript_v1.py) → revised_highlighted/clean .docx/.pdf (22 p.);
+  response letter: paper/journal/response_letter.py → pix2db_FAITH_response_to_reviewers.docx (7 p.).
+- All revision artefacts on HF musapeker/pix2db-revision (private). Reviewer text docs/revision/reviews.txt: never commit.
+- Open: check RunPod console that the pod is stopped/deleted; submit revision.

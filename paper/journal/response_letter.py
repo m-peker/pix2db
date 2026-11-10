@@ -295,8 +295,11 @@ concern(R2, 1, "Strengthen the experimental design by incorporating task-adapted
          f"generated 9,589 additional synthetic images and trained a synthetic-only model on 36,589 examples, the "
          f"same number as the mixture, and a real-only model on the 19,589 converted real examples (Section 4.5, "
          f"Table 8). With size fixed, synthetic-only training still transfers poorly (PubTabNet F1 "
-         f"{r('ptn_synth')} vs {r('ptn_ours')}), so the effect is due to the kind of data, while the real-only "
-         f"model reads real tables ({r('ptn_real')}) but recovers no relations (FK recall {r('fkr_real')})."])
+         f"{r('ptn_synth')} vs {r('ptn_ours')}), so the effect is due to the kind of data. The real-only model "
+         f"is as good as the mixture on real tables (PubTabNet {r('ptn_real')}, FinTabNet {r('ftn_real')}) but "
+         f"declares no foreign key (FK recall {r('fkr_real')}), reaches {r('synth_real')} exact match on the "
+         f"synthetic test, and falls behind on receipts, invoices and charts. We now state this division "
+         f"explicitly: the real data teaches reading, the synthetic data teaches the relational structure."])
 concern(R2, 2, "Expand the evaluation beyond cell-level accuracy and foreign-key recall to include referential "
         "integrity, foreign-key precision, schema correctness, and query-execution equivalence.",
         [f"All four were implemented and are reported (Section 3.5 defines them). Table 7 gives FK precision, "

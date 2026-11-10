@@ -219,7 +219,7 @@ def main():
 
     # ---------------------------------------------------------------- schema and query metrics (synthetic test)
     rows = []
-    for k in ["ours", "seed1", "seed2", "html2b", "q8", "h8", "q4", "q2", "dl"]:
+    for k in ["ours", "seed1", "seed2", "html2b", "q8", "h8", "q4", "q2", "dl", "synth", "real"]:
         if not has("test", k):
             continue
         g = get("test", k)
@@ -228,7 +228,8 @@ def main():
         r = [SYS[k][1], f2(g.fk_recall.dropna().mean()), f2(fkp), f2(g.ref_integrity.mean()), f2(pkp),
              f2(g.table_count_ok.mean()), f2(g.col_count_ok.mean()), f2(g.type_acc.mean()),
              f2(g.q_ok.sum() / g.q_n.sum())]
-        rows.append(r)
+        if k not in ("synth", "real"):  # ablation models: numbers only, not in the schema table
+            rows.append(r)
         NUM[f"fkr_{k}"], NUM[f"fkp_{k}"], NUM[f"ri_{k}"], NUM[f"pkp_{k}"] = r[1], r[2], r[3], r[4]
         NUM[f"tc_{k}"], NUM[f"cc_{k}"], NUM[f"ta_{k}"], NUM[f"qa_{k}"] = r[5], r[6], r[7], r[8]
         NUM[f"nfk_{k}"] = f"{int(g.n_pred_fk_ok.sum())}/{int(g.n_pred_fk.sum())}"

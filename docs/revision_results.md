@@ -80,3 +80,21 @@ invoices F1 .572 → .596 (FK 0); chart .941/.713 → .941/.703. Seed variation 
 - seed2 run: disk full (100 GB) at checkpoint-1200 → freed 41 GB (8B/4B weights, HF dataset cache, merged models);
   retried by `scripts/after_rev.sh seed2 synth` (resumes from checkpoint-900) after the main pipeline.
   `runpodctl` wrapper in /workspace/venv/bin defers the main pipeline's stop until after_rev.sh finishes.
+
+## Real-only (19,589 converted real examples, v2 recipe) — scores_rev_real.csv
+Finished 2026-11-10 10:58 UTC (train 3h54m). Cell F1/recall vs mixed v2:
+PubTabNet .80 (.81), FinTabNet .97 (.96), TabRecSet .53 (.52), CORD .89 (.93), receipts .64 (1.00),
+invoices .40 (.54), charts .34 (.71), synthetic exact .42 (.86), FK recall .00 (.99).
+=> Synthetic data does not improve reading real tables; it adds relations, layouts, receipts/invoices/charts.
+Manuscript 4.5 and 6.1 + response R2.1 rewritten accordingly.
+
+## Seed 2 (resumed from checkpoint-900 after disk-full crash) — scores_rev_seed2.csv
+Done 2026-11-10 14:48 UTC. Primary metric seeds 42/1/2: synth .856/.854/.859, PTN .805/.788/.792,
+FTN .964/.963/.959, CORD .928/.925/.914, receipts .998/.993/.998, TRS .525/.530/.531,
+invoices .541/.562/.545, charts .713/.703/.700, FK recall .986/.995/1.000. Max s.d. .011 (invoices).
+Loss curve = fail log + resumed log, deduplicated by epoch (loss_seed2.txt).
+
+## Synthetic-only at matched size (36,589: data/train + receipt_train + synth_extra) — scores_rev_synth.csv
+Downloaded from HF musapeker/pix2db-revision (pod unreachable afterwards, 20:53 UTC).
+synth .85, PTN .43, FTN .46, CORD .86, receipts 1.00, TRS .43, invoices .51, charts .73, FK 1.00.
+Real-table scores identical to v1 (24k) => kind of data, not amount. CORD helped by synthetic receipts.
