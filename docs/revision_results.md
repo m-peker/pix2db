@@ -2,7 +2,7 @@
 
 Pod: A40, **9 vCPU, 50 GB RAM** (RUNPOD_CPU_COUNT=9) — do not run many CPU processes.
 Pipeline: `scripts/pipeline_rev2.sh` on pod (log `/workspace/logs/pipeline_rev.log`), uploads to HF
-`musapeker/pix2db-revision` (private), stops the pod at the end. Local snapshot: `paper/cache/rev/` (data metas + runs).
+`musapeker/pix2db-revision` (public), stops the pod at the end. Local snapshot: `paper/cache/rev/` (data metas + runs).
 
 ## New evaluation sets
 - `real_invoices`: 490 invoices (katanaml-org/invoices-donut-data-v1, MIT; train+val+test, never used for training).

@@ -927,7 +927,7 @@ def write(g):
          "dataset with all training and evaluation splits at https://huggingface.co/datasets/musapeker/pix2db-data, "
          "and the code, evaluation outputs and figure scripts at https://github.com/m-peker/pix2db. An interactive "
          "demonstration is available at https://huggingface.co/spaces/musapeker/pix2db.<hl> The models, outputs "
-         "and scores of the revision experiments are released with the code.</hl>")
+         "and scores of the revision experiments are available at https://huggingface.co/musapeker/pix2db-revision.</hl>")
     BACK("Acknowledgments", f"A preprint of this manuscript is available on Research Square: {g['PREPRINT']}.")
     BACK("Conflicts of Interest", "The author declares no conflict of interest.")
 

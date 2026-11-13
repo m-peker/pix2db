@@ -97,5 +97,5 @@ Findings:
 - Tables: paper/make_rev_tables.py → paper/tables_rev/; scores in paper/cache/rev/runs/rev/*/scores_rev_*.csv.
 - Manuscript: paper/journal/manuscript.py (old: manuscript_v1.py) → revised_highlighted/clean .docx/.pdf (22 p.);
   response letter: paper/journal/response_letter.py → pix2db_FAITH_response_to_reviewers.docx (7 p.).
-- All revision artefacts on HF musapeker/pix2db-revision (private). Reviewer text docs/revision/reviews.txt: never commit.
+- All revision artefacts on HF musapeker/pix2db-revision (public). Reviewer text docs/revision/reviews.txt: never commit.
 - Open: check RunPod console that the pod is stopped/deleted; submit revision.
