@@ -21,7 +21,7 @@ R = json.loads((PAPER / "tables_rev" / "numbers.json").read_text(encoding="utf-8
 
 def r(k):
     v = R.get(k, "[pending]")
-    return v.lstrip("+").replace("-", "−") if k.startswith(("diff_", "ci_", "degci_")) else v
+    return v.replace("+", "").replace("-", "−") if k.startswith(("diff_", "ci_", "degci_")) else v
 
 
 FONT = '<w:rFonts w:ascii="Garamond" w:hAnsi="Garamond"/>'
@@ -91,7 +91,7 @@ P("The revision rests on new experiments rather than on rewording alone. We trai
   "the mixed model, a real-only model, and two further seeds), added Docling as a dedicated document converter, "
   "built three new evaluation sets (490 independent full-page invoices with a two-table gold database, 300 charts "
   "annotated by type and labeling, and the L5 scenes rendered with each degradation separately), and added "
-  "schema-level and query-execution metrics. Several results are unfavourable to our model, in particular on the "
+  "schema-level and query-execution metrics. Several results are unfavorable to our model, in particular on the "
   "independent invoices, and we report them as such; the claims of the paper have been narrowed accordingly. "
   "Section and table numbers below refer to the revised manuscript.")
 P()
@@ -175,7 +175,8 @@ concern(R1, 5, "Section 4 should provide a more detailed analysis of the propose
          f"{r('lv3_ours')} while the 8B SQL model falls to {r('lv3_q8')} and the HTML pipeline to "
          f"{r('lv3_h8')}, and its remaining failures are more often structural ({r('lvfail3_rows')} with a wrong "
          f"row count); documents are its easiest level ({r('lv4_ours')}); scans cost little ({r('lv5_ours')}); "
-         f"charts are the weakest level for every system ({r('lv6_ours')}). From L1 to L5 its exact match stays "
+         f"charts are its weakest level ({r('lv6_ours')}), as for the 8B SQL model. From L1 to L5 its exact match "
+         f"stays "
          f"between {r('lv1_ours')} and {r('lv4_ours')}, whereas the 8B HTML pipeline ranges from {r('lv1_h8')} to "
          f"{r('lv5_h8')}, so the performance is consistent across document characteristics except charts."])
 concern(R1, 6, "The analysis of L5 and L6 requires particular attention. For L5, discuss the effects of individual "

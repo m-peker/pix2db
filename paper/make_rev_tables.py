@@ -49,6 +49,11 @@ DEG = ["clean", "rotation", "lighting", "noise", "blur", "contrast", "grayscale"
 _cache: dict[str, pd.DataFrame] = {}
 
 
+
+def sg(x):
+    """Signed 2-decimal value; values that round to zero are written 0.00 (no sign)."""
+    return "0.00" if abs(x) < 0.005 else f"{x:+.2f}"
+
 def load(d: str) -> pd.DataFrame:
     if d not in _cache:
         fs = sorted((RUNS / d).glob("scores*.csv"))
@@ -118,6 +123,10 @@ def main():
         fk = get("test", k).fk_recall.dropna() if has("test", k) else pd.Series(dtype=float)
         r.append(f2(fk.mean()) if len(fk) else "–")
         rows.append(r)
+    fks = [float(r[-1]) for r in rows if r[-1] != "–"]  # bold the best FK recall as well
+    for r in rows:
+        if r[-1] != "–" and float(r[-1]) == max(fks):
+            r[-1] = f"<b>{r[-1]}</b>"
     save("main", ["System"] + [v[2] for v in SETS.values()] + ["FK recall"], rows)
 
     # significance: ours vs every competitor on every set
@@ -128,9 +137,9 @@ def main():
                 continue
             m, lo, hi, p = paired(get(d, "ours")[met], get(d, k)[met])
             sig.append([lab, SYS[k][1], f"{m:+.3f}", f"[{lo:+.3f}, {hi:+.3f}]", "<0.001" if p < 0.001 else f"{p:.3f}"])
-            NUM[f"diff_{sk}_{k}"] = f"{m:+.2f}"
+            NUM[f"diff_{sk}_{k}"] = sg(m)
             NUM[f"p_{sk}_{k}"] = "< 0.001" if p < 0.001 else f"= {p:.3f}"
-            NUM[f"ci_{sk}_{k}"] = f"[{lo:+.2f}, {hi:+.2f}]"
+            NUM[f"ci_{sk}_{k}"] = f"[{sg(lo)}, {sg(hi)}]"
     save("significance", ["Set", "Competitor", "Δ (ours − competitor)", "95% interval", "p (one-sided)"], sig)
     for sk, (d, met, _) in SETS.items():
         for k in order + ["v1", "synth", "real", "seed1", "seed2", "ours_raw"]:
@@ -184,7 +193,7 @@ def main():
     # paired: clean vs each variant for ours (exact), p two-sided via bootstrap
     for v in DEG[1:]:
         m, lo, hi, p = paired(get(f"degrade/{v}", "ours").table_exact, get("degrade/clean", "ours").table_exact)
-        NUM[f"degci_{v}"] = f"{m:+.2f} [{lo:+.2f}, {hi:+.2f}]"
+        NUM[f"degci_{v}"] = f"{m:+.3f} [{lo:+.3f}, {hi:+.3f}]"
 
     # ---------------------------------------------------------------- charts
     meta = {}
@@ -253,7 +262,7 @@ def main():
 
     # invoices detail
     rows = []
-    for k in ["ours", "seed1", "html2b", "q8", "q4", "q2", "h8", "dl"]:
+    for k in ["ours", "seed1", "seed2", "html2b", "q8", "q4", "q2", "h8", "dl"]:
         if not has("real_invoices", k):
             continue
         g = get("real_invoices", k)

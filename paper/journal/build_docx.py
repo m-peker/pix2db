@@ -190,6 +190,9 @@ def table(header: list[str], rows: list[list[str]], widths: list[int], caption: 
     BODY.append("".join(xml))
     if footer:
         BODY.append(para("tablefooterJCTA", footer))
+    # 6 pt gap so the following paragraph does not touch the bottom rule
+    BODY.append('<w:p><w:pPr><w:suppressLineNumbers/><w:spacing w:before="0" w:after="0" w:line="120" '
+                'w:lineRule="exact"/></w:pPr></w:p>')
     return label
 
 

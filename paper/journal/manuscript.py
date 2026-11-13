@@ -26,7 +26,7 @@ def write(g):
 
     def r(k):  # revision number, visible placeholder while a run is still pending
         v = R.get(k, "[pending]")
-        return v.lstrip("+").replace("-", "−") if k.startswith(("diff_", "ci_", "degci_")) else v
+        return v.replace("+", "").replace("-", "−") if k.startswith(("diff_", "ci_", "degci_")) else v
 
     def PH(t):  # paragraph that is new or rewritten in the revision
         P(f"<hl>{t}</hl>")
@@ -498,7 +498,7 @@ def write(g):
        "charts from the test databases, 98 bar, 76 horizontal bar, 67 line and 59 pie charts, 198 of them with "
        "value labels. <i>Degraded scans</i> re-render the 150 L5 test scenes once without degradation and once "
        "with each of eight degradations at its strongest training setting. <i>Invoices</i> are 490 full-page "
-       "invoices from a public invoice dataset [[katanaml2023invoices]] (MIT licence), produced by a generator "
+       "invoices from a public invoice dataset [[katanaml2023invoices]] (MIT license), produced by a generator "
        "unrelated to ours, with a different layout, fonts and page size; the dataset annotates the header fields "
        "and the line items, from which the two-table gold of Section 3.2.3 is built. Its annotation omits the "
        "item number, the unit of measure and the summary table, so recall is reported.")
@@ -538,8 +538,9 @@ def write(g):
        f"layout for PIX2DB ({r('lv4_ours')}), because it is short and its conventions are regular, and among "
        f"the hardest for the HTML pipeline ({r('lv4_h8')}), whose loader has no notion of a form above a table. "
        f"<i>Scans (L5).</i> Exact match drops only from {r('lv4_ours')} to {r('lv5_ours')}; Section 4.3 breaks "
-       f"this down by degradation. <i>Charts (L6)</i> are the weakest level for every system ({r('lv6_ours')} "
-       f"for PIX2DB, {r('lv6_q8')} for the 8B model) and are analyzed in Section 4.4.")
+       f"this down by degradation. <i>Charts (L6)</i> are the weakest level for PIX2DB ({r('lv6_ours')}) and for "
+       f"the 8B model prompted for SQL ({r('lv6_q8')}); only for the 8B HTML pipeline are hierarchical tables and "
+       f"scans harder. Section 4.4 analyzes the charts.")
     PH(f"Two conclusions follow. First, PIX2DB is not particularly effective under one condition only: from L1 "
        f"to L5 its exact match stays between {r('lv1_ours')} and {r('lv4_ours')}, while the 8B HTML pipeline "
        f"ranges from {r('lv1_h8')} to {r('lv5_h8')}. Second, the task-adapted 2B HTML model matches PIX2DB on "
@@ -573,7 +574,7 @@ def write(g):
     # ---- 4.4 charts
     H2("<hl>4.4. Charts by Type and Labeling (L6)</hl>")
     hdr, rows = RT("charts")
-    t_ch = table(hdr, rows, [2157, 640, 640, 640, 640, 760, 760, 760, 760, 640],
+    t_ch = table(hdr, rows, [1897, 600, 620, 600, 600, 720, 720, 700, 700, 700],
                  f"Results on 300 test charts ({r('nch_bar')} bar, {r('nch_barh')} horizontal bar, {r('nch_line')} "
                  f"line, {r('nch_pie')} pie; {r('nch_lab')} with value labels). Columns 2–5: table exact match by "
                  f"chart type; then exact match and cell F1 for labeled and unlabeled charts.",
@@ -606,8 +607,9 @@ def write(g):
                  size=15, head_size=14, hl=True)
     PH(f"{t_sc} answers whether the relational part of the output is correct, beyond the cells. PIX2DB declares "
        f"{r('fkr_ours')} of the gold foreign keys, and of the keys it declares {r('nfk_ours')} are correct "
-       f"(precision {r('fkp_ours')}). The 8B model declares fewer keys and more wrong ones "
-       f"({r('nfk_q8')} correct, precision {r('fkp_q8')}); the 4B and 2B models rarely declare one. Referential "
+       f"(precision {r('fkp_ours')}). The 8B model declares about as many keys but more wrong ones "
+       f"({r('nfk_q8')} correct, precision {r('fkp_q8')}) and finds {r('fkr_q8')} of the gold keys; the 4B and "
+       f"2B models find only a quarter ({r('fkr_q4')} and {r('fkr_q2')}). Referential "
        f"integrity is {r('ri_ours')}, so the declared keys are also satisfied by the inserted rows. Primary keys "
        f"show the largest difference: {r('npk_ours')} of the PIX2DB primary keys agree with the gold (precision "
        f"{r('pkp_ours')}), against {r('npk_q8')} for the 8B model ({r('pkp_q8')}), which declares far more "
@@ -728,8 +730,26 @@ def write(g):
     # ================================================================== 5. Comparison
     H1("<hl>5. Comparison with Existing Methods</hl>")
     H2("<hl>5.1. Results on All Evaluation Sets</hl>")
+    lbl_main = f"Table {g['TABNO'][0] + 1}"  # introduced before the table so the heading is not left alone
+    PH(f"{lbl_main}, moved here from Section 4, compares all systems on all sets. The comparison is limited to "
+       f"systems that can be run on the same images and scored by the same protocol: three sizes of the base "
+       f"model family, the strongest prompting pipeline found in the pilot study, a dedicated document "
+       f"converter, and the task-adapted baseline. It does not establish superiority over the state of the art "
+       f"in table recognition, which is measured with other metrics on other test sets, and the results should "
+       f"be read as a comparison of approaches to the relational task under one protocol.")
+    PH(f"<i>Where PIX2DB is better.</i> On the synthetic test it leads the 8B SQL model by "
+       f"{r('diff_synth_q8')} in exact match (0.856 against 0.754 before rounding) and the 8B HTML pipeline by "
+       f"{r('diff_synth_h8')}, and its foreign-key "
+       f"recall ({r('fkr_ours')}) has no counterpart among the baselines. On FinTabNet, CORD and the synthetic "
+       f"receipts it is ahead of every untuned system by at least 8 points (p &lt; 0.001). Docling is far behind "
+       f"on every set except FinTabNet ({r('ftn_dl')}): its table detector was trained on cleanly typeset "
+       f"pages, and on crops, receipts and photographs it often finds no table at all. <i>Where it is not "
+       f"better.</i> On PubTabNet the 8B HTML pipeline is behind by only {r('diff_ptn_h8')} and the difference "
+       f"is not significant; flat scientific tables are exactly the case for which HTML suffices. On charts the 8B "
+       f"model is slightly ahead, as discussed in Section 4.4. On the two independent sources PIX2DB loses, "
+       f"which Sections 5.3 and 5.4 analyze.")
     hdr, rows = RT("main")
-    t_main = table(hdr, rows, [1489, 707, 707, 707, 707, 707, 707, 707, 707, 625],
+    t_main = table(hdr, rows, [1300, 740, 780, 770, 720, 740, 770, 730, 720, 587],
                    "Comparison on all evaluation sets, with 95% bootstrap intervals. Synthetic and charts: table "
                    "exact match; PubTabNet, FinTabNet and TabRecSet: cell F1; CORD, synthetic receipts and "
                    "invoices: cell recall; FK recall on the synthetic test images that contain a foreign key. "
@@ -742,24 +762,8 @@ def write(g):
                           f"(difference {r('diff_trs_h8')}, interval {r('ci_trs_h8')}). No difference to the "
                           f"task-adapted 2B HTML model is significant on any set.",
                    size=13, head_size=13, hl=True)
-    PH(f"{t_main}, moved here from Section 4, compares all systems on all sets. The comparison is limited to "
-       f"systems that can be run on the same images and scored by the same protocol: three sizes of the base "
-       f"model family, the strongest prompting pipeline found in the pilot study, a dedicated document "
-       f"converter, and the task-adapted baseline. It does not establish superiority over the state of the art "
-       f"in table recognition, which is measured with other metrics on other test sets, and the results should "
-       f"be read as a comparison of approaches to the relational task under one protocol.")
-    PH(f"<i>Where PIX2DB is better.</i> On the synthetic test it leads the 8B SQL model by "
-       f"{r('diff_synth_q8')} in exact match and the 8B HTML pipeline by {r('diff_synth_h8')}, and its foreign-key "
-       f"recall ({r('fkr_ours')}) has no counterpart among the baselines. On FinTabNet, CORD and the synthetic "
-       f"receipts it is ahead of every untuned system by at least 8 points (p &lt; 0.001). Docling is far behind "
-       f"on every set except FinTabNet ({r('ftn_dl')}): its table detector was trained on cleanly typeset "
-       f"pages, and on crops, receipts and photographs it often finds no table at all. <i>Where it is not "
-       f"better.</i> On PubTabNet the 8B HTML pipeline is behind by only {r('diff_ptn_h8')} and the difference "
-       f"is not significant; flat scientific tables are exactly the case for which HTML suffices. On charts the 8B "
-       f"model is slightly ahead, as discussed in Section 4.4. On the two independent sources PIX2DB loses, "
-       f"which Sections 5.3 and 5.4 analyze.")
     hdr, rows = RT("query")
-    t_q = table(hdr, rows, [2157, 712, 712, 712, 712, 712, 712, 712, 712],
+    t_q = table(hdr, rows, [1650, 740, 800, 780, 720, 760, 800, 760, 847],
                 "Query-execution equivalence on all sets: pooled share of the automatically generated queries "
                 "(Section 3.5) whose result on the predicted database equals the result on the gold database.",
                 size=15, head_size=14, hl=True)
@@ -800,8 +804,9 @@ def write(g):
        f"directly above the table, and does not generalize this to a header spread over the page with labels "
        f"such as \"Seller:\" and \"Client:\" above multi-line addresses. Fine-tuning on a narrow set of document "
        f"layouts has thus replaced a general but inconsistent ability of the base model with a precise but "
-       f"narrow one. The same seed-1 model behaves in the same way ({r('inv_seed1')} recall, FK recall 0), and "
-       f"so does the task-adapted HTML model. More varied document templates in the training data, or keeping "
+       f"narrow one. The models trained with seeds 1 and 2 behave in the same way "
+       f"(recall {r('inv_rec_seed1')} and {r('inv_rec_seed2')}, FK recall {r('inv_fk_seed1')} and "
+       f"{r('inv_fk_seed2')}), and so does the task-adapted HTML model. More varied document templates in the training data, or keeping "
        f"part of the base model's behavior through mixing in general instruction data, are the obvious remedies; "
        f"we leave them to future work and report the result as a limitation of the present model.")
     H2("<hl>5.4. Independent Photographs: TabRecSet</hl>")
